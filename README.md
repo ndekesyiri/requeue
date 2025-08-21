@@ -19,13 +19,13 @@ Trust me on this, its just a single file. ReQueue is a high-performance, Redis-b
 ## 📦 Installation
 
 ```bash
-npm install re-queue
+npm install re-queuejs
 ```
 
 ## 🚀 Quick Start
 
 ```javascript
-const QueueManager = require('re-queue');
+const QueueManager = require('re-queuejs');
 
 // Initialize with configuration
 const queueManager = QueueManager({

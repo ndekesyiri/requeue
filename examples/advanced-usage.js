@@ -3,7 +3,7 @@
  * Demonstrates hooks, events, batch operations, and monitoring
  */
 
-const createQueueManager = require('../index');
+const createQueueManager = require('../src/index');
 
 async function advancedFeaturesExample() {
   console.log('🚀 Starting Advanced Features Example\n');

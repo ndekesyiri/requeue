@@ -4,7 +4,7 @@
  * monitoring, and graceful shutdown
  */
 
-const createQueueManager = require('../index');
+const createQueueManager = require('../src/index');
 
 class ProductionWorker {
   constructor(config = {}) {

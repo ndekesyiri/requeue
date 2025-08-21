@@ -3,7 +3,7 @@
  * Demonstrates fundamental queue operations
  */
 
-const createQueueManager = require('../index');
+const createQueueManager = require('../src/index');
 
 async function basicUsageExample() {
   console.log('🚀 Starting Basic Usage Example\n');
