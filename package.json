@@ -1,18 +1,36 @@
 {
   "name": "re-queue",
   "version": "1.0.0",
-  "description": "High-performance Redis-backed queue with caching and hooks",
+  "description": "A lightweight nodejs and redis queue manager",
   "main": "src/index.js",
-  "dependencies": {
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ndekesyiri/requeue.git"
+  },
+  "keywords": [
+    "Redis",
+    "queue",
+    "manager",
+    "memory",
+    "cache",
+    "hooks",
+    "performance"
+  ],
+   "dependencies": {
     "ioredis": "^5.3.2",
     "uuid": "^9.0.0", 
     "lru-cache": "^10.0.0"
   },
-  "keywords": ["redis", "queue", "cache", "performance"],
   "author": "ndekesyiri",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": ""
-  }
+  "bugs": {
+    "url": "https://github.com/ndekesyiri/requeue/issues"
+  },
+  "homepage": "https://github.com/ndekesyiri/requeue#readme"
 }
