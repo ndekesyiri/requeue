@@ -1,32 +1,11 @@
 const Redis = require('ioredis');
 const EventEmitter = require('events');
 const { v4: uuidv4 } = require('uuid');
-const LRU = require('lru-cache');
 
 class QueueManager {
   constructor(config = {}) {
     // Extract the cache and Redis configs
     const { cache: cacheConfig = {}, redis: redisConfig = {}, ...otherConfig } = config;
-    
-    // Verify version compatibility - this should be done befor initializing caches to handle different LRU versions
-     if (LRU.version && parseInt(LRU.version.split('.')[0]) >= 7) {
-       // Modern API
-       this.queueCache = new LRU({
-         max: this.cacheConfig.maxSize,
-         ttl: this.cacheConfig.ttl,
-         updateAgeOnGet: true,
-         updateAgeOnHas: true,
-         allowStale: false
-       });
-     } else {
-       // Legacy API
-       this.queueCache = new LRU({
-         max: this.cacheConfig.maxSize,
-         maxAge: this.cacheConfig.ttl, // Legacy API uses maxAge instead of ttl
-         updateAgeOnGet: true,
-         updateAgeOnHas: true
-       });
-     }
 
     // Default Redis configs
     const defaultRedisConfig = {
@@ -53,22 +32,22 @@ class QueueManager {
     this.eventEmitter = new EventEmitter();
     this.listeners = new Map(); // Store queue-specific event emitters
     this.cacheConfig = defaultCacheConfig;
-    
-    // Initialize cache layers
+
+    // Initialize cache layers now
     this._initializeCaches();
-    
+
     // Redis key prefixes
     this.QUEUE_PREFIX = 'qm:queue:';
     this.QUEUE_ITEMS_PREFIX = 'qm:items:';
     this.QUEUE_META_PREFIX = 'qm:meta:';
-    
+
     // Cache sync tracking for write-back strategy
     this.pendingWrites = new Set();
     this.syncTimer = null;
-    
-    // Initialize Redis connection
+
+    // Initialize Redis connection, attempt to connect to redis
     this._initializeRedis();
-    
+
     // Start background sync if write-back is enabled
     if (this.cacheConfig.enabled && this.cacheConfig.strategy === 'write-back') {
       this._startBackgroundSync();
@@ -82,22 +61,40 @@ class QueueManager {
   _initializeCaches() {
     if (!this.cacheConfig.enabled) return;
 
-    const lruOptions = {
-      max: this.cacheConfig.maxSize,
-      ttl: this.cacheConfig.ttl,
-      updateAgeOnGet: true,
-      updateAgeOnHas: true
-    };
+    const LRU = require('lru-cache');
+    // Detect lru-cache version and then init cache
+    const isModernLRU = LRU && LRU.version && parseInt(LRU.version.split('.')[0]) >= 7;
 
-    // Cache for queue metadata
-    this.queueCache = new LRU(lruOptions);
-    
-    // Cache for queue items (nested structure: queueId -> items array)
-    this.itemsCache = new LRU(lruOptions);
-    
+    // Verify version compatibility - this should be done befor initializing caches to handle different LRU versions
+    if (isModernLRU) {
+      // Modern API
+      const lruOptions = {
+        max: this.cacheConfig.maxSize,
+        ttl: this.cacheConfig.ttl,
+        updateAgeOnGet: true,
+        updateAgeOnHas: true,
+        allowStale: false
+      }
+      // Cache for queue metadata
+      this.queueCache = new LRU(lruOptions);
+
+      // Cache for queue items (nested structure: queueId -> items array)
+      this.itemsCache = new LRU(lruOptions);
+    } else {
+      // Legacy API
+      const lruOptions = {
+        max: this.cacheConfig.maxSize,
+        maxAge: this.cacheConfig.ttl, // Legacy API uses maxAge instead of ttl
+        updateAgeOnGet: true,
+        updateAgeOnHas: true
+      };
+      this.queueCache = new LRU(lruOptions);
+      this.itemsCache = new LRU(lruOptions);
+    }
+
     // Track which queues have been loaded into cache
     this.loadedQueues = new Set();
-    
+
     // Cache statistics
     this.cacheStats = {
       hits: 0,
@@ -168,7 +165,7 @@ class QueueManager {
 
     for (const writeKey of writes) {
       const [type, queueId] = writeKey.split(':');
-      
+
       if (type === 'queue' && this.queueCache.has(queueId)) {
         const queueData = this.queueCache.get(queueId);
         syncPromises.push(this._syncQueueToRedis(queueId, queueData));
@@ -176,7 +173,7 @@ class QueueManager {
         const items = this.itemsCache.get(queueId);
         syncPromises.push(this._syncItemsToRedis(queueId, items));
       }
-      
+
       this.pendingWrites.delete(writeKey);
     }
 
@@ -205,7 +202,7 @@ class QueueManager {
    */
   async _syncItemsToRedis(queueId, items) {
     const itemsKey = `${this.QUEUE_ITEMS_PREFIX}${queueId}`;
-    
+
     if (items && items.length > 0) {
       const serializedItems = items.map(item => JSON.stringify(item));
       await this.redis.del(itemsKey);
@@ -228,24 +225,24 @@ class QueueManager {
     if (this.queueCache.has(queueId)) {
       this.cacheStats.hits++;
       const cachedQueue = this.queueCache.get(queueId);
-      
+
       // Update item count from cache if items are also cached
       if (this.itemsCache.has(queueId)) {
         const cachedItems = this.itemsCache.get(queueId) || [];
         cachedQueue.itemCount = cachedItems.length;
       }
-      
+
       return cachedQueue;
     }
 
     // Cache miss - load from Redis
     this.cacheStats.misses++;
     const queueData = await this._getQueueFromRedis(queueId);
-    
+
     // Cache the result
     this.queueCache.set(queueId, queueData);
     this.loadedQueues.add(queueId);
-    
+
     return queueData;
   }
 
@@ -256,7 +253,7 @@ class QueueManager {
   async _getQueueFromRedis(queueId) {
     const queueKey = `${this.QUEUE_META_PREFIX}${queueId}`;
     const queueData = await this.redis.hgetall(queueKey);
-    
+
     if (Object.keys(queueData).length === 0) {
       throw new Error(`Queue with ID ${queueId} not found`);
     }
@@ -282,7 +279,7 @@ class QueueManager {
     if (this.itemsCache.has(queueId)) {
       this.cacheStats.hits++;
       const cachedItems = this.itemsCache.get(queueId) || [];
-      
+
       // Handle range selection
       if (start === 0 && end === -1) {
         return cachedItems;
@@ -295,10 +292,10 @@ class QueueManager {
     // Cache miss - load from Redis
     this.cacheStats.misses++;
     const items = await this._getQueueItemsFromRedis(queueId, 0, -1); // Load all items for cache
-    
+
     // Cache all items
     this.itemsCache.set(queueId, items);
-    
+
     // Return requested range
     if (start === 0 && end === -1) {
       return items;
@@ -329,7 +326,7 @@ class QueueManager {
 
     if (queueData) {
       this.queueCache.set(queueId, queueData);
-      
+
       if (this.cacheConfig.strategy === 'write-back') {
         this.pendingWrites.add(`queue:${queueId}`);
       }
@@ -337,7 +334,7 @@ class QueueManager {
 
     if (items !== null) {
       this.itemsCache.set(queueId, items);
-      
+
       if (this.cacheConfig.strategy === 'write-back') {
         this.pendingWrites.add(`items:${queueId}`);
       }
@@ -368,7 +365,7 @@ class QueueManager {
     try {
       const queueKey = `${this.QUEUE_META_PREFIX}${queueId}`;
       const timestamp = new Date().toISOString();
-      
+
       const queueMetadata = {
         id: queueId,
         name,
@@ -392,7 +389,7 @@ class QueueManager {
 
       // Write to Redis immediately for all strategies
       await this.redis.hset(queueKey, queueMetadata);
-      
+
       // Initialize empty queue list in Redis
       const itemsKey = `${this.QUEUE_ITEMS_PREFIX}${queueId}`;
       await this.redis.del(itemsKey);
@@ -436,10 +433,10 @@ class QueueManager {
     try {
       // Verify queue exists
       const existingQueue = await this._getQueueFromCacheOrRedis(queueId);
-      
+
       // Add timestamp
       updates.updatedAt = new Date().toISOString();
-      
+
       const updatedQueue = { ...existingQueue, ...updates };
 
       // Update based on strategy
@@ -448,7 +445,7 @@ class QueueManager {
         const queueKey = `${this.QUEUE_META_PREFIX}${queueId}`;
         await this.redis.hset(queueKey, updates);
       }
-      
+
       // Update cache
       this._updateCache(queueId, updatedQueue);
 
@@ -474,11 +471,11 @@ class QueueManager {
     try {
       // Verify queue exists
       const queueData = await this._getQueueFromCacheOrRedis(queueId);
-      
+
       // Delete from Redis
       const queueKey = `${this.QUEUE_META_PREFIX}${queueId}`;
       const itemsKey = `${this.QUEUE_ITEMS_PREFIX}${queueId}`;
-      
+
       const pipeline = this.redis.pipeline();
       pipeline.del(queueKey);
       pipeline.del(itemsKey);
@@ -515,11 +512,11 @@ class QueueManager {
   async addToQueue(queueId, item, options = {}) {
     const itemId = uuidv4();
     const timestamp = new Date().toISOString();
-    
+
     try {
       // Verify queue exists
       await this._getQueueFromCacheOrRedis(queueId);
-      
+
       const queueItem = {
         id: itemId,
         data: item,
@@ -563,14 +560,14 @@ class QueueManager {
       return queueItem;
     } catch (error) {
       console.error(`QueueManager: Error adding item to queue ${queueId}:`, error.message);
-      
+
       // Emit error event
       this._emitQueueEvent(queueId, 'item:add:error', {
         queueId,
         item,
         error: error.message
       });
-      
+
       throw error;
     }
   }
@@ -599,17 +596,17 @@ class QueueManager {
   async deleteItemFromQueue(queueId, itemId) {
     try {
       await this._getQueueFromCacheOrRedis(queueId); // Verify queue exists
-      
+
       // Get current items
       const currentItems = await this._getQueueItemsFromCacheOrRedis(queueId);
-      
+
       // Find and remove the item
       const itemIndex = currentItems.findIndex(item => item.id === itemId);
-      
+
       if (itemIndex === -1) {
         throw new Error(`Item with ID ${itemId} not found in queue ${queueId}`);
       }
-      
+
       const deletedItem = currentItems[itemIndex];
       const updatedItems = currentItems.filter(item => item.id !== itemId);
 
@@ -682,7 +679,7 @@ class QueueManager {
     this.itemsCache.clear();
     this.loadedQueues.clear();
     this.pendingWrites.clear();
-    
+
     // Reset stats
     this.cacheStats = {
       hits: 0,
@@ -710,10 +707,10 @@ class QueueManager {
    */
   async _executeHooks(hooks, hookType, queueId, item) {
     if (!Array.isArray(hooks) || hooks.length === 0) return;
-    
+
     // Limit to 3 hooks as per requirements
     const limitedHooks = hooks.slice(0, 3);
-    
+
     for (let i = 0; i < limitedHooks.length; i++) {
       try {
         const hook = limitedHooks[i];
@@ -724,7 +721,7 @@ class QueueManager {
         }
       } catch (error) {
         console.error(`QueueManager: Error executing ${hookType} hook ${i}:`, error.message);
-        
+
         // Emit hook error event
         this._emitQueueEvent(queueId, `hook:${hookType}:error`, {
           queueId,
@@ -732,7 +729,7 @@ class QueueManager {
           item,
           error: error.message
         });
-        
+
         throw new Error(`${hookType} hook failed at index ${i}: ${error.message}`);
       }
     }
@@ -754,9 +751,9 @@ class QueueManager {
       }
     }
 
-    const updates = { 
-      itemCount, 
-      updatedAt: new Date().toISOString() 
+    const updates = {
+      itemCount,
+      updatedAt: new Date().toISOString()
     };
 
     // Update based on strategy
@@ -787,7 +784,7 @@ class QueueManager {
 
     // Emit to global event emitter
     this.eventEmitter.emit('queueChange', eventData);
-    
+
     // Emit to queue-specific listener if it exists
     if (this.listeners.has(queueId)) {
       this.listeners.get(queueId).emit('change', eventData);
@@ -814,22 +811,22 @@ class QueueManager {
         // Get remaining queues from Redis
         const pattern = `${this.QUEUE_META_PREFIX}*`;
         const keys = await this.redis.keys(pattern);
-        
+
         for (const key of keys) {
           const queueId = key.replace(this.QUEUE_META_PREFIX, '');
-          
+
           // Skip if already in cache
           if (this.queueCache.has(queueId)) continue;
-          
+
           const queueData = await this.redis.hgetall(key);
           if (Object.keys(queueData).length > 0) {
             // Get current item count
             const itemsKey = `${this.QUEUE_ITEMS_PREFIX}${queueId}`;
             const itemCount = await this.redis.llen(itemsKey);
             queueData.itemCount = itemCount;
-            
+
             cachedQueues.push(queueData);
-            
+
             // Cache for future access
             this.queueCache.set(queueId, queueData);
           }
@@ -840,7 +837,7 @@ class QueueManager {
         // Non-cached version
         const pattern = `${this.QUEUE_META_PREFIX}*`;
         const keys = await this.redis.keys(pattern);
-        
+
         const queues = [];
         for (const key of keys) {
           const queueData = await this.redis.hgetall(key);
@@ -850,11 +847,11 @@ class QueueManager {
             const itemsKey = `${this.QUEUE_ITEMS_PREFIX}${queueId}`;
             const itemCount = await this.redis.llen(itemsKey);
             queueData.itemCount = itemCount;
-            
+
             queues.push(queueData);
           }
         }
-        
+
         return queues;
       }
     } catch (error) {
@@ -882,12 +879,12 @@ class QueueManager {
       // Remove all listeners
       this.listeners.forEach(listener => listener.removeAllListeners());
       this.listeners.clear();
-      
+
       // Clear cache
       if (this.cacheConfig.enabled) {
         this.clearCache();
       }
-      
+
       // Close Redis connection
       await this.redis.quit();
       console.log('QueueManager: Redis connection closed');

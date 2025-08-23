@@ -22,15 +22,18 @@
     "hooks",
     "performance"
   ],
-   "dependencies": {
+  "dependencies": {
     "ioredis": "^5.3.2",
-    "uuid": "^9.0.0", 
-    "lru-cache": "^10.0.0"
+    "lru-cache": "^10.0.0",
+    "uuid": "^9.0.0"
   },
   "author": "ndekesyiri",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ndekesyiri/requeue/issues"
   },
-  "homepage": "https://github.com/ndekesyiri/requeue#readme"
+  "homepage": "https://github.com/ndekesyiri/requeue#readme",
+  "devDependencies": {
+    "jest": "^30.0.5"
+  }
 }
