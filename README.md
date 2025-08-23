@@ -1,4 +1,4 @@
-# ReQueue - Redis Queue Manager for nodejs
+# ReQueuejs - Redis Queue Manager for nodejs
 
 This repo contains a lightweight nodejs-based Queue manager.
 Trust me on this, its just a single file. ReQueue is a high-performance, Redis-backed queue management system with intelligent caching, hooks, and real-time events. Built for workloads of any kind, seriously.
