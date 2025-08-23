@@ -8,6 +8,26 @@ class QueueManager {
     // Extract the cache and Redis configs
     const { cache: cacheConfig = {}, redis: redisConfig = {}, ...otherConfig } = config;
     
+    // Verify version compatibility - this should be done befor initializing caches to handle different LRU versions
+     if (LRU.version && parseInt(LRU.version.split('.')[0]) >= 7) {
+       // Modern API
+       this.queueCache = new LRU({
+         max: this.cacheConfig.maxSize,
+         ttl: this.cacheConfig.ttl,
+         updateAgeOnGet: true,
+         updateAgeOnHas: true,
+         allowStale: false
+       });
+     } else {
+       // Legacy API
+       this.queueCache = new LRU({
+         max: this.cacheConfig.maxSize,
+         maxAge: this.cacheConfig.ttl, // Legacy API uses maxAge instead of ttl
+         updateAgeOnGet: true,
+         updateAgeOnHas: true
+       });
+     }
+
     // Default Redis configs
     const defaultRedisConfig = {
       host: 'localhost',
