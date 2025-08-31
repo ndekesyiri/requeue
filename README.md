@@ -16,13 +16,13 @@ Trust me on this, its just a single file. ReQueue is a high-performance, Redis-b
 - **Advanced Filtering**: Search and filter items with custom predicates
 - **Zero Dependencies**: Only requires ioredis, uuid, and lru-cache
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install re-queuejs
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ```javascript
 const QueueManager = require('re-queuejs');
@@ -64,7 +64,7 @@ const stats = await queueManager.getQueueStats('tasks');
 console.log('Queue stats:', stats);
 ```
 
-## 📚 Configuration
+## Configuration
 
 ### Redis Configuration
 
@@ -99,7 +99,7 @@ const queueManager = QueueManager({
 });
 ```
 
-## 🎯 Core Operations
+## Core Operations
 
 ### Queue Management
 
@@ -165,11 +165,9 @@ const next5Items = await queueManager.peekQueue('proc-001', 5);
 // Pop items (FIFO)
 const item = await queueManager.popFromQueue('proc-001');
 
-// Flush all items
-await queueManager.flushQueue('proc-001');
 ```
 
-### Advanced Operations
+### Advanced Operations (Still to come)
 
 ```javascript
 // Search items
@@ -182,9 +180,6 @@ const highPriorityItems = await queueManager.filterItems('proc-001',
   item => item.data.priority === 'high'
 );
 
-// Count items by status
-const statusCounts = await queueManager.countItemsByStatus('proc-001');
-
 // Requeue with priority
 await queueManager.requeueItem('proc-001', 'item-id', {
   position: 'head',
@@ -196,8 +191,6 @@ await queueManager.requeueItem('proc-001', 'item-id', {
 // Move item between queues
 await queueManager.moveItemBetweenQueues('source-queue', 'target-queue', 'item-id');
 
-// Bulk status update
-await queueManager.bulkUpdateItemStatus('proc-001', ['id1', 'id2'], 'completed');
 ```
 
 ## 🎣 Hooks System
@@ -223,7 +216,7 @@ const hooks = {
 await queueManager.addToQueue('proc-001', data, { actions: hooks });
 ```
 
-## 📊 Events & Monitoring
+## Events & Monitoring
 
 ### Real-time Events
 
@@ -247,41 +240,7 @@ queueListener.on('change', (event) => {
 });
 ```
 
-### Performance Monitoring
-
-```javascript
-// Get cache statistics
-const cacheStats = queueManager.getCacheStats();
-console.log('Cache hit rate:', cacheStats.stats.hitRate);
-
-// Get detailed queue statistics
-const queueStats = await queueManager.getQueueStats('proc-001');
-console.log('Average processing time:', queueStats.items.avgProcessingTime);
-
-// Health check
-const health = await queueManager.healthCheck();
-console.log('System health:', health.status);
-```
-
-## 🔄 Batch Operations
-
-Process multiple operations at a go, efficiently:
-
-```javascript
-const operations = [
-  { type: 'addToQueue', queueId: 'proc-001', item: { task: 'task1' } },
-  { type: 'updateItem', queueId: 'proc-001', itemId: 'id1', updates: { status: 'done' } },
-  { type: 'deleteItem', queueId: 'proc-001', itemId: 'id2' }
-];
-
-const result = await queueManager.batchOperations(operations, {
-  batchSize: 50
-});
-
-console.log(`${result.successful} operations completed, ${result.failed} failed`);
-```
-
-## 🛡️ Production Considerations
+## Safety Handling
 
 ### Graceful Shutdown
 
@@ -308,20 +267,8 @@ try {
 }
 ```
 
-### Health Monitoring
 
-```javascript
-// Periodic health checks
-setInterval(async () => {
-  const health = await queueManager.healthCheck();
-  if (health.status !== 'healthy') {
-    console.error('Queue manager unhealthy:', health);
-    // Alert monitoring system
-  }
-}, 30000);
-```
-
-## ⚡ Performance Tips
+## Performance
 
 1. **Cache Strategy**: Use the `write-through` for consistency, `write-back` for performance, your choice, depending on the project
 2. **Batch Size**: Tune `batchSize` based on your Redis latency and through-put needs
@@ -335,20 +282,20 @@ setInterval(async () => {
 - Node.js >= 14.0.0
 - Redis >= 6.0.0
 
-## Somebody with thee time:
+## Somebody with the time:
 
 - Carry out a benchmark test for the thrill of it 
 
-## 🔗 Related Projects
+## Related Projects
 
 - [ioredis](https://github.com/luin/ioredis) - Redis client
 - [lru-cache](https://github.com/isaacs/node-lru-cache) - LRU cache implementation
 
-## 📜 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with [ioredis](https://github.com/luin/ioredis) for Redis connectivity
 - Uses [lru-cache](https://github.com/isaacs/node-lru-cache) for intelligent caching
