@@ -138,42 +138,42 @@ function initDemo() {
     const demos = {
         basic: [
             { type: 'command', text: 'npm install re-queuejs' },
-            { type: 'output', text: '✅ Package installed successfully' },
+            { type: 'output', text: 'Package installed successfully' },
             { type: 'command', text: 'node demo.js' },
-            { type: 'output', text: '🚀 Starting ReQueue...' },
-            { type: 'output', text: '✅ Connected to Redis' },
-            { type: 'output', text: '📦 Created queue: tasks' },
-            { type: 'output', text: '📝 Added item: Process Data' },
-            { type: 'output', text: '🔄 Processing item...' },
-            { type: 'output', text: '✅ Completed: Process Data' }
+            { type: 'output', text: 'Starting ReQueue...' },
+            { type: 'output', text: 'Connected to Redis' },
+            { type: 'output', text: 'Created queue: tasks' },
+            { type: 'output', text: 'Added item: Process Data' },
+            { type: 'output', text: 'Processing item...' },
+            { type: 'output', text: 'Completed: Process Data' }
         ],
         advanced: [
             { type: 'command', text: 'npm install re-queuejs' },
-            { type: 'output', text: '✅ Package installed successfully' },
+            { type: 'output', text: 'Package installed successfully' },
             { type: 'command', text: 'node advanced-demo.js' },
-            { type: 'output', text: '🚀 Starting Advanced Features...' },
-            { type: 'output', text: '✅ Connected to Redis' },
-            { type: 'output', text: '📦 Created queue: tasks' },
-            { type: 'output', text: '📡 Setting up event listeners...' },
-            { type: 'output', text: '🎣 Before addToQueue: task-1' },
-            { type: 'output', text: '📊 Item added with priority: 10' },
-            { type: 'output', text: '🔔 Event: item:added - tasks' },
-            { type: 'output', text: '🔄 Processing with hooks...' },
-            { type: 'output', text: '✅ Completed: Advanced Task' }
+            { type: 'output', text: 'Starting Advanced Features...' },
+            { type: 'output', text: 'Connected to Redis' },
+            { type: 'output', text: 'Created queue: tasks' },
+            { type: 'output', text: 'Setting up event listeners...' },
+            { type: 'output', text: 'Before addToQueue: task-1' },
+            { type: 'output', text: 'Item added with priority: 10' },
+            { type: 'output', text: 'Event: item:added - tasks' },
+            { type: 'output', text: 'Processing with hooks...' },
+            { type: 'output', text: 'Completed: Advanced Task' }
         ],
         typescript: [
             { type: 'command', text: 'npm install re-queuejs' },
-            { type: 'output', text: '✅ Package installed successfully' },
+            { type: 'output', text: 'Package installed successfully' },
             { type: 'command', text: 'npx tsc --version' },
             { type: 'output', text: 'Version 5.9.2' },
             { type: 'command', text: 'npx ts-node demo.ts' },
-            { type: 'output', text: '🚀 Starting TypeScript Demo...' },
-            { type: 'output', text: '✅ TypeScript types loaded' },
-            { type: 'output', text: '✅ Connected to Redis' },
-            { type: 'output', text: '📦 Created queue: tasks' },
-            { type: 'output', text: '📝 Added typed item: TaskData' },
-            { type: 'output', text: '🔄 Processing with type safety...' },
-            { type: 'output', text: '✅ Completed: TypeScript Task' }
+            { type: 'output', text: 'Starting TypeScript Demo...' },
+            { type: 'output', text: 'TypeScript types loaded' },
+            { type: 'output', text: 'Connected to Redis' },
+            { type: 'output', text: 'Created queue: tasks' },
+            { type: 'output', text: 'Added typed item: TaskData' },
+            { type: 'output', text: 'Processing with type safety...' },
+            { type: 'output', text: 'Completed: TypeScript Task' }
         ]
     };
     
