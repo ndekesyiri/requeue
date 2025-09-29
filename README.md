@@ -1,305 +1,172 @@
-# ReQueuejs - Redis Queue Manager for nodejs
+# QueueManager Website
 
-This repo contains a lightweight nodejs-based Queue manager.
-Trust me on this, its just a single file. ReQueue is a high-performance, Redis-backed queue management system with intelligent caching, hooks, and real-time events. Built for workloads of any kind, seriously.
+A futuristic, developer-focused single-page website for the QueueManager project. Built with modern web technologies and designed for GitHub Pages hosting.
 
-## Features
+## 🎨 Design Features
 
-- **High Performance**: Multi-layer LRU caching with configurable strategies
-- **Multiple Cache Strategies**: Write-through, write-back, and read-through caching
-- **Advanced Hooks**: Before/after hooks for all operations with error handling
-- **Real-time Events**: Queue change notifications and performance monitoring
-- **Production Ready**: Graceful shutdown, health checks, and comprehensive error handling
-- **Performance Monitoring**: Detailed metrics and statistics tracking
-- **Batch Operations**: Efficient bulk operations for high-throughput scenarios
-- **FIFO Queue Operations**: Peek, pop, and priority-based requeuing
-- **Advanced Filtering**: Search and filter items with custom predicates
-- **Zero Dependencies**: Only requires ioredis, uuid, and lru-cache
+- **Futuristic Dark Theme**: Space-inspired color palette with neon accents
+- **Particle Background**: Animated floating particles for visual appeal
+- **Interactive Demo**: Live terminal simulation with different examples
+- **Responsive Design**: Mobile-first approach with smooth animations
+- **TypeScript Support**: Highlights the project's TypeScript capabilities
+- **Performance Focused**: Optimized for speed and user experience
 
-## Installation
+## 🚀 Technologies Used
+
+- **HTML5**: Semantic markup with accessibility in mind
+- **CSS3**: Modern CSS with custom properties, Grid, and Flexbox
+- **JavaScript**: Vanilla JS with ES6+ features
+- **Prism.js**: Syntax highlighting for code blocks
+- **AOS**: Animate On Scroll library for smooth animations
+- **Custom Animations**: Hand-crafted CSS animations and transitions
+
+## 📁 File Structure
+
+```
+website/
+├── index.html          # Main HTML file
+├── styles.css          # All CSS styles
+├── script.js           # JavaScript functionality
+└── README.md           # This file
+```
+
+## 🎯 Key Sections
+
+1. **Hero Section**: Animated queue visualization with performance stats
+2. **Features**: 6 key features with interactive cards and code examples
+3. **Live Demo**: Interactive terminal with different demo scenarios
+4. **Installation**: Tabbed installation instructions for different package managers
+5. **Performance**: Animated performance metrics and statistics
+6. **Footer**: Links and project information
+
+## 🎨 Color Palette
+
+- **Primary**: Electric Blue (#00d4ff)
+- **Secondary**: Neon Green (#00ff88)
+- **Accent**: Purple (#8b5cf6)
+- **Background**: Space Black (#0a0a0a)
+- **Surface**: Dark Gray (#1a1a1a)
+- **Text**: Light Gray (#e5e5e5)
+
+## ⚡ Interactive Features
+
+- **Animated Counters**: Statistics that count up on scroll
+- **Queue Demo**: Animated queue items with progress bars
+- **Live Terminal**: Interactive demo with different scenarios
+- **Smooth Scrolling**: Navigation with smooth scroll behavior
+- **Copy to Clipboard**: Code blocks with copy functionality
+- **Responsive Navigation**: Mobile-friendly navigation
+
+## 🚀 Deployment
+
+### GitHub Pages
+
+1. Push the website files to your repository
+2. Enable GitHub Pages in repository settings
+3. Select source branch (usually `main` or `gh-pages`)
+4. Your site will be available at `https://username.github.io/repository-name`
+
+### Local Development
+
+1. Clone the repository
+2. Navigate to the website directory
+3. Open `index.html` in a browser or use a local server:
 
 ```bash
-npm install re-queuejs
+# Using Python
+python -m http.server 8000
+
+# Using Node.js
+npx serve .
+
+# Using PHP
+php -S localhost:8000
 ```
 
-## Quick Start
+## 📱 Responsive Design
 
-```javascript
-const QueueManager = require('re-queuejs');
+The website is fully responsive with breakpoints at:
+- **Mobile**: 480px and below
+- **Tablet**: 768px and below
+- **Desktop**: 769px and above
 
-// Initialize with configuration
-const queueManager = QueueManager({
-  redis: {
-    host: 'localhost',
-    port: 6379
-  },
-  cache: {
-    enabled: true,
-    strategy: 'write-through',
-    maxSize: 10000
-  }
-});
+## 🎭 Animations
 
-// Create a queue
-await queueManager.createQueue('task-queue', 'tasks', {
-  description: 'Main task processing queue'
-});
+- **Particle Background**: Floating particles with random colors
+- **Hero Title**: Typewriter effect with staggered animation
+- **Feature Cards**: Hover effects with glow and transform
+- **Queue Demo**: Animated queue items with progress bars
+- **Counters**: Animated number counting on scroll
+- **Smooth Transitions**: All interactions have smooth transitions
 
-// Add items to queue, with configurations
-const item = await queueManager.addToQueue('tasks', {
-  type: 'email',
-  recipient: 'user@example.com',
-  subject: 'Welcome!'
-});
+## 🔧 Customization
 
-// Process items
-const nextItem = await queueManager.popFromQueue('tasks');
-if (nextItem) {
-  console.log('Processing:', nextItem.data);
-  await queueManager.markItemStatus('tasks', nextItem.id, 'completed');
-}
+### Colors
+Update the CSS custom properties in `:root`:
 
-// Get queue statistics
-const stats = await queueManager.getQueueStats('tasks');
-console.log('Queue stats:', stats);
-```
-
-## Configuration
-
-### Redis Configuration
-
-```javascript
-const queueManager = QueueManager({
-  redis: {
-    host: 'localhost',
-    port: 6379,
-    password: 'your-password',
-    db: 0,
-    connectTimeout: 10000,
-    commandTimeout: 5000,
-    retryDelayOnFailover: 100,
-    maxRetriesPerRequest: 3,
-    enableAutoPipelining: true
-  }
-});
-```
-
-### Cache Configuration
-
-```javascript
-const queueManager = QueueManager({
-  cache: {
-    enabled: true,
-    strategy: 'write-through', // 'write-through' | 'write-back' | 'read-through'
-    maxSize: 10000,             // Maximum number of items in cache
-    ttl: 3600000,              // TTL in milliseconds (1 hour)
-    syncInterval: 2000,        // Background sync interval for write-back
-    batchSize: 100            // Batch size for operations
-  }
-});
-```
-
-## Core Operations
-
-### Queue Management
-
-```javascript
-// Create a queue
-const queue = await queueManager.createQueue('processing', 'proc-001', {
-  description: 'Data processing queue',
-  priority: 'high'
-});
-
-// Get queue details
-const queueInfo = await queueManager.getQueue('proc-001');
-
-// Update queue
-await queueManager.updateQueue('proc-001', {
-  description: 'Updated description'
-});
-
-// Delete queue
-await queueManager.deleteQueue('proc-001');
-
-// Get all queues
-const allQueues = await queueManager.getAllQueues();
-```
-
-### Item Operations
-
-```javascript
-// Add item with hooks
-const item = await queueManager.addToQueue('proc-001', {
-  task: 'process-data',
-  priority: 1
-}, {
-  actions: {
-    beforeAction: [(item) => console.log('Adding:', item.id)],
-    afterAction: [(item) => console.log('Added:', item.id)]
-  }
-});
-
-// Get specific item
-const item = await queueManager.getItem('proc-001', 'item-id');
-
-// Update item
-await queueManager.updateItem('proc-001', 'item-id', {
-  status: 'processing',
-  progress: 50
-});
-
-// Delete item
-await queueManager.deleteItemFromQueue('proc-001', 'item-id');
-
-// Get queue items (with pagination)
-const items = await queueManager.getQueueItems('proc-001', 0, 10);
-```
-
-### Queue Navigation
-
-```javascript
-// Peek at next items without removing
-const nextItem = await queueManager.peekQueue('proc-001');
-const next5Items = await queueManager.peekQueue('proc-001', 5);
-
-// Pop items (FIFO)
-const item = await queueManager.popFromQueue('proc-001');
-
-```
-
-### Advanced Operations (Still to come)
-
-```javascript
-// Search items
-const foundItem = await queueManager.findItem('proc-001', 
-  item => item.data.priority > 5
-);
-
-// Filter items
-const highPriorityItems = await queueManager.filterItems('proc-001',
-  item => item.data.priority === 'high'
-);
-
-// Requeue with priority
-await queueManager.requeueItem('proc-001', 'item-id', {
-  position: 'head',
-  priority: 10,
-  updateStatus: true,
-  newStatus: 'pending'
-});
-
-// Move item between queues
-await queueManager.moveItemBetweenQueues('source-queue', 'target-queue', 'item-id');
-
-```
-
-## 🎣 Hooks System
-
-Run, Execute custom logic before/after operations:
-
-```javascript
-const hooks = {
-  beforeAction: [
-    async (item, queueId, context) => {
-      console.log(`Before ${context.operation}:`, item.id);
-      // Validation, logging, of as simple as sending and email etc.
-    }
-  ],
-  afterAction: [
-    async (item, queueId, context) => {
-      console.log(`After ${context.operation}:`, item.id);
-      // Notifications, cleanup, you get the point.
-    }
-  ]
-};
-
-await queueManager.addToQueue('proc-001', data, { actions: hooks });
-```
-
-## Events & Monitoring
-
-### Real-time Events
-
-```javascript
-// Listen to global events
-queueManager.eventEmitter.on('queueChange', (event) => {
-  console.log('Queue change:', event);
-});
-
-// Listen to specific queue
-const queueListener = queueManager.listen('proc-001');
-queueListener.on('change', (event) => {
-  switch(event.eventType) {
-    case 'item:added':
-      console.log('Item added:', event.item);
-      break;
-    case 'item:completed':
-      console.log('Item completed:', event.item);
-      break;
-  }
-});
-```
-
-## Safety Handling
-
-### Graceful Shutdown
-
-```javascript
-// Handle shutdown signals
-process.on('SIGINT', async () => {
-  console.log('Shutting down gracefully...');
-  await queueManager.close({
-    timeout: 30000,
-    forceSyncCache: true
-  });
-  process.exit(0);
-});
-```
-
-### Error Handling
-
-```javascript
-try {
-  await queueManager.addToQueue('proc-001', data);
-} catch (error) {
-  console.error('Operation failed:', error.message);
-  // Handle error appropriately
+```css
+:root {
+    --primary: #00d4ff;
+    --secondary: #00ff88;
+    --accent: #8b5cf6;
+    /* ... other colors */
 }
 ```
 
+### Content
+- Update the HTML content in `index.html`
+- Modify the demo data in `script.js`
+- Adjust animations in `styles.css`
 
-## Performance
+### Performance
+- Optimize images and assets
+- Minify CSS and JavaScript
+- Use a CDN for external libraries
 
-1. **Cache Strategy**: Use the `write-through` for consistency, `write-back` for performance, your choice, depending on the project
-2. **Batch Size**: Tune `batchSize` based on your Redis latency and through-put needs
-3. **Cache Size**: Set `maxSize` based on available memory and working set size within your process scope
-4. **Connection Pooling**: Enable `enableAutoPipelining` for better Redis performance
-5. **Monitoring**: Regularly check cache hit rates and adjust configuration just to keep up to speed with the flow
+## 📊 Performance Features
 
+- **Lazy Loading**: Images and animations load on scroll
+- **Optimized Animations**: Hardware-accelerated CSS animations
+- **Efficient JavaScript**: Throttled scroll events and optimized selectors
+- **Minimal Dependencies**: Only essential external libraries
+- **Fast Loading**: Optimized assets and efficient code
 
-## What you need
+## 🎯 SEO Optimization
 
-- Node.js >= 14.0.0
-- Redis >= 6.0.0
+- **Meta Tags**: Comprehensive meta tags for social sharing
+- **Structured Data**: Semantic HTML for better indexing
+- **Performance**: Fast loading times for better rankings
+- **Mobile-First**: Responsive design for mobile users
+- **Accessibility**: WCAG compliant design
 
-## Somebody with the time:
+## 🚀 Future Enhancements
 
-- Carry out a benchmark test for the thrill of it 
+- **Dark/Light Mode Toggle**: Theme switching capability
+- **More Interactive Demos**: Additional demo scenarios
+- **Blog Section**: News and updates
+- **Documentation Integration**: Embedded documentation
+- **Analytics**: User behavior tracking
+- **PWA Features**: Offline capability and app-like experience
 
-## Related Projects
+## 📝 License
 
-- [ioredis](https://github.com/luin/ioredis) - Redis client
-- [lru-cache](https://github.com/isaacs/node-lru-cache) - LRU cache implementation
+This website is part of the QueueManager project and follows the same MIT license.
 
-## License
+## 🤝 Contributing
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## Acknowledgments
+## 📞 Support
 
-- Built with [ioredis](https://github.com/luin/ioredis) for Redis connectivity
-- Uses [lru-cache](https://github.com/isaacs/node-lru-cache) for intelligent caching
+For issues or questions about the website:
+- Create an issue on GitHub
+- Contact the maintainer
+- Check the documentation
 
 ---
 
-**Made during vac 🥸**
+**Built with ❤️ for the QueueManager project**
