@@ -68,8 +68,8 @@ const PopOperations = {
 
       const poppedItems = [];
 
-      if (this.cacheConfig.enabled && this.itemsCache.has(queueId)) {
-        const cachedItems = this.itemsCache.get(queueId) || [];
+      if (this.cache.config.enabled && this.cache.itemsCache.has(queueId)) {
+        const cachedItems = this.cache.itemsCache.get(queueId) || [];
         const itemsToTake = Math.min(count, cachedItems.length);
 
         // Pop items from the front (oldest first for FIFO)
@@ -83,10 +83,10 @@ const PopOperations = {
         await this._updateQueueItemCount(queueId, cachedItems.length);
 
         // Handle write strategies
-        if (this.cacheConfig.strategy === 'write-through' || !this.cacheConfig.enabled) {
+        if (this.cache.config.strategy === 'write-through' || !this.cache.config.enabled) {
           await this._syncItemsToRedis(queueId, cachedItems);
-        } else if (this.cacheConfig.strategy === 'write-back') {
-          this.pendingWrites.add(`items:${queueId}`);
+        } else if (this.cache.config.strategy === 'write-back') {
+          this.cache.pendingWrites.add(`items:${queueId}`);
         }
       } else {
         // Direct Redis operations using pipeline for efficiency

@@ -3,11 +3,23 @@
   "version": "2.0.0",
   "description": "A lightweight nodejs and redis queue manager",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "directories": {
     "example": "examples"
   },
+  "files": [
+    "src/**/*",
+    "dist/**/*",
+    "*.d.ts",
+    "tsconfig.json"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "dev": "ts-node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "repository": {
     "type": "git",
@@ -34,6 +46,10 @@
   },
   "homepage": "https://github.com/ndekesyiri/requeue#readme",
   "devDependencies": {
-    "jest": "^30.0.5"
+    "@types/ioredis": "^4.28.10",
+    "@types/node": "^24.6.0",
+    "jest": "^30.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }

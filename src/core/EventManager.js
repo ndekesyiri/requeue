@@ -478,6 +478,25 @@ class EventManager extends EventEmitter {
     this.rateLimitWindow.clear();
     this.middleware = [];
   }
+
+  /**
+   * Get queue-specific event emitter
+   */
+  getQueueEmitter(queueId) {
+    if (!this.queueListeners.has(queueId)) {
+      const emitter = new EventEmitter();
+      this.queueListeners.set(queueId, emitter);
+    }
+    
+    return this.queueListeners.get(queueId);
+  }
+
+  /**
+   * Get global event emitter (this instance)
+   */
+  getGlobalEmitter() {
+    return this;
+  }
 }
 
 module.exports = EventManager;

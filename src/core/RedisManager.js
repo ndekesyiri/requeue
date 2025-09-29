@@ -548,6 +548,13 @@ class RedisManager {
       this.connectionPromise = null;
     }
   }
+
+  /**
+   * Get the Redis client for direct access
+   */
+  get client() {
+    return this.redis;
+  }
 }
 
 module.exports = RedisManager;

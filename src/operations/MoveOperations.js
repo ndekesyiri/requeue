@@ -87,7 +87,7 @@ const MoveOperations = {
       }
 
       // Update based on strategy
-      if (this.cacheConfig.strategy === 'write-through' || !this.cacheConfig.enabled) {
+      if (this.cache.config.strategy === 'write-through' || !this.cache.config.enabled) {
         await this._syncItemsToRedis(queueId, updatedItems);
       }
 
@@ -191,7 +191,7 @@ const MoveOperations = {
       }
 
       // Update both queues based on strategy
-      if (this.cacheConfig.strategy === 'write-through' || !this.cacheConfig.enabled) {
+      if (this.cache.config.strategy === 'write-through' || !this.cache.config.enabled) {
         await Promise.all([
           this._syncItemsToRedis(sourceQueueId, updatedSourceItems),
           this._syncItemsToRedis(targetQueueId, updatedTargetItems)
