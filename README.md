@@ -2,7 +2,7 @@
 
 A lightweight, high-performance Node.js queue management system built on Redis with advanced caching, event-driven architecture, and TypeScript support.
 
-## 🚀 Features
+## Features
 
 - **Redis-Powered**: Built on Redis for high performance and reliability
 - **Advanced Caching**: LRU cache with write-through/write-back strategies
@@ -13,13 +13,13 @@ A lightweight, high-performance Node.js queue management system built on Redis w
 - **Performance Monitoring**: Built-in metrics and health checks
 - **Enterprise Ready**: Production-ready with error handling and logging
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install re-queuejs
 ```
 
-## 🎯 Quick Start
+## Quick Start
 
 ### Basic Usage
 
@@ -86,7 +86,7 @@ async function main(): Promise<void> {
 }
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Core Components
 
@@ -103,14 +103,14 @@ async function main(): Promise<void> {
 - **LRU Eviction**: Automatic cache management
 - **Cache Invalidation**: Smart invalidation strategies
 
-## 📊 Performance
+## Performance
 
 - **High Throughput**: Process thousands of items per second
 - **Low Latency**: Sub-millisecond cache operations
 - **Memory Efficient**: Smart caching with automatic eviction
 - **Scalable**: Horizontal scaling with Redis clustering
 
-## 🔧 Configuration
+## Configuration
 
 ```javascript
 const queueManager = await createQueueManager({
@@ -133,7 +133,7 @@ const queueManager = await createQueueManager({
 });
 ```
 
-## 📚 API Reference
+## API Reference
 
 ### Queue Operations
 - `createQueue(name, id, options)` - Create a new queue
@@ -157,7 +157,7 @@ const queueManager = await createQueueManager({
 - `getCacheStats()` - Get cache performance
 - `healthCheck()` - System health check
 
-## 🎣 Events & Hooks
+## Events & Hooks
 
 ### Event Types
 - `item:added` - Item added to queue
@@ -179,7 +179,7 @@ queueManager.on('after:addToQueue', (context) => {
 });
 ```
 
-## 🚀 SaaS Platform
+## SaaS Platform
 
 This project includes a complete **SaaS platform** in the `/saas` folder:
 
@@ -191,7 +191,7 @@ This project includes a complete **SaaS platform** in the `/saas` folder:
 
 See `/saas/README.md` for detailed SaaS documentation.
 
-## 📖 Examples
+## Examples
 
 Check the `/examples` folder for comprehensive examples:
 
@@ -200,7 +200,7 @@ Check the `/examples` folder for comprehensive examples:
 - **Production Usage**: Real-world worker implementation
 - **TypeScript Examples**: Type-safe implementations
 
-## 🛠️ Development
+## Development
 
 ### Prerequisites
 - Node.js 18+
@@ -224,11 +224,11 @@ npm test
 npm run build
 ```
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -236,17 +236,17 @@ MIT License - see [LICENSE](LICENSE) file for details.
 4. Add tests
 5. Submit a pull request
 
-## 📞 Support
+## Support
 
 - **Documentation**: [Full Documentation](https://requeue.com/docs)
 - **Issues**: [GitHub Issues](https://github.com/ndekesyiri/requeue/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/ndekesyiri/requeue/discussions)
 - **Email**: support@requeue.com
 
-## 🌟 Show Your Support
+## Show Your Support
 
-Give a ⭐️ if this project helped you!
+Give a star if this project helped you!
 
 ---
 
-**Built with ❤️ by [ndekesyiri](https://github.com/ndekesyiri)**
+**Built with love by [ndekesyiri](https://github.com/ndekesyiri)**
