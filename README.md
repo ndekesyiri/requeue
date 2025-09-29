@@ -227,10 +227,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Support
 
-- **Documentation**: [Full Documentation](https://requeue.com/docs)
 - **Issues**: [GitHub Issues](https://github.com/ndekesyiri/requeue/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/ndekesyiri/requeue/discussions)
-- **Email**: support@requeue.com
+- **Email**: ndekesyiri@outlook.com
 
 ## Show Your Support
 

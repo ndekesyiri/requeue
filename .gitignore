@@ -8,3 +8,6 @@ coverage/
 *.swo
 .vscode/
 .idea/
+
+# Private SaaS Platform (not for public repository)
+saas/
