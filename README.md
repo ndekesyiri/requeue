@@ -179,17 +179,6 @@ queueManager.on('after:addToQueue', (context) => {
 });
 ```
 
-## SaaS Platform
-
-This project includes a complete **SaaS platform** in the `/saas` folder:
-
-- **Multi-tenant Architecture**: Complete tenant isolation
-- **API-First Design**: RESTful APIs with authentication
-- **Billing Integration**: Stripe-powered subscription management
-- **Usage Tracking**: Real-time monitoring and analytics
-- **Enterprise Features**: Webhooks, SLA, custom integrations
-
-See `/saas/README.md` for detailed SaaS documentation.
 
 ## Examples
 

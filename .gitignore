@@ -8,6 +8,3 @@ coverage/
 *.swo
 .vscode/
 .idea/
-
-# SaaS Production Environment
-saas/
