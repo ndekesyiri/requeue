@@ -1,4 +1,4 @@
-// QueueManager Website Scripts
+// ReQueue Website Scripts
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize AOS (Animate On Scroll)
     if (typeof AOS !== 'undefined') {
@@ -140,7 +140,7 @@ function initDemo() {
             { type: 'command', text: 'npm install re-queuejs' },
             { type: 'output', text: '✅ Package installed successfully' },
             { type: 'command', text: 'node demo.js' },
-            { type: 'output', text: '🚀 Starting QueueManager...' },
+            { type: 'output', text: '🚀 Starting ReQueue...' },
             { type: 'output', text: '✅ Connected to Redis' },
             { type: 'output', text: '📦 Created queue: tasks' },
             { type: 'output', text: '📝 Added item: Process Data' },
