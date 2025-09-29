@@ -1,7 +1,7 @@
 const createQueueManager = require('../src/index');
 
 async function popOperationsExample() {
-  console.log('🚀 Starting Pop Operations Example\n');
+  console.log('Starting Pop Operations Example\n');
 
   // Initialize queue manager
   const queueManager = await createQueueManager({
@@ -17,7 +17,7 @@ async function popOperationsExample() {
   });
 
   try {
-    console.log('✅ Connected to Redis');
+    console.log('Connected to Redis');
 
     // Generate a unique queue ID for this example run
     const queueId = `task-queue-${Date.now()}`;
@@ -28,7 +28,7 @@ async function popOperationsExample() {
       queueId,
       { description: 'Queue for processing various tasks' }
     );
-    console.log(`📦 Created queue: ${queue.name}`);
+    console.log(`Created queue: ${queue.name}`);
 
     // Add multiple items to the queue
     const tasks = [
@@ -42,7 +42,7 @@ async function popOperationsExample() {
       { id: 8, type: 'sms', recipient: '+1122334455', message: 'Delivery scheduled' }
     ];
 
-    console.log('\n📝 Adding items to queue...');
+    console.log('\nAdding items to queue...');
     for (const task of tasks) {
       const item = await queueManager.addToQueue(queueId, task);
       console.log(`   Added item ${item.id}: ${task.type} for ${task.recipient}`);
@@ -50,13 +50,13 @@ async function popOperationsExample() {
 
     // Get initial queue statistics
     const initialStats = await queueManager.getQueueStats(queueId);
-    console.log(`\n📊 Initial Queue Stats: ${initialStats.itemCount} items total`);
+    console.log(`\nInitial Queue Stats: ${initialStats.itemCount} items total`);
 
     // ===== SINGLE POP OPERATIONS =====
-    console.log('\n🔍 === SINGLE POP OPERATIONS ===');
+    console.log('\n=== SINGLE POP OPERATIONS ===');
     
     // Pop one item at a time
-    console.log('\n1️⃣ Popping items one by one:');
+    console.log('\nPopping items one by one:');
     for (let i = 0; i < 3; i++) {
       const poppedItem = await queueManager.popFromQueue(queueId);
       if (poppedItem) {
@@ -69,13 +69,13 @@ async function popOperationsExample() {
 
     // Check queue size after single pops
     const afterSinglePops = await queueManager.getQueueStats(queueId);
-    console.log(`\n📊 Queue size after single pops: ${afterSinglePops.itemCount} items`);
+    console.log(`\nQueue size after single pops: ${afterSinglePops.itemCount} items`);
 
     // ===== BATCH POP OPERATIONS =====
-    console.log('\n🔍 === BATCH POP OPERATIONS ===');
+    console.log('\n=== BATCH POP OPERATIONS ===');
     
     // Pop multiple items at once
-    console.log('\n2️⃣ Popping 3 items in batch:');
+    console.log('\nPopping 3 items in batch:');
     const batch1 = await queueManager.popBatchFromQueue(queueId, 3);
     console.log(`   Popped ${batch1.length} items in batch:`);
     batch1.forEach((item, index) => {
@@ -84,10 +84,10 @@ async function popOperationsExample() {
 
     // Check queue size after batch pop
     const afterBatch1 = await queueManager.getQueueStats(queueId);
-    console.log(`\n📊 Queue size after batch pop: ${afterBatch1.itemCount} items`);
+    console.log(`\nQueue size after batch pop: ${afterBatch1.itemCount} items`);
 
     // Pop remaining items in another batch
-    console.log('\n3️⃣ Popping remaining items in batch:');
+    console.log('\nPopping remaining items in batch:');
     const batch2 = await queueManager.popBatchFromQueue(queueId, 5); // Try to pop 5, but only 2 remain
     console.log(`   Popped ${batch2.length} items in batch:`);
     batch2.forEach((item, index) => {
@@ -95,23 +95,23 @@ async function popOperationsExample() {
     });
 
     // ===== EDGE CASES =====
-    console.log('\n🔍 === EDGE CASES ===');
+    console.log('\n=== EDGE CASES ===');
     
     // Try to pop from empty queue
-    console.log('\n4️⃣ Attempting to pop from empty queue:');
+    console.log('\nAttempting to pop from empty queue:');
     const emptyPop = await queueManager.popFromQueue(queueId);
     console.log(`   Result: ${emptyPop ? 'Got item' : 'No items available'}`);
 
     // Try to pop batch from empty queue
-    console.log('\n5️⃣ Attempting batch pop from empty queue:');
+    console.log('\nAttempting batch pop from empty queue:');
     const emptyBatch = await queueManager.popBatchFromQueue(queueId, 3);
     console.log(`   Result: Got ${emptyBatch.length} items`);
 
     // ===== HOOKS DEMONSTRATION =====
-    console.log('\n🔍 === HOOKS DEMONSTRATION ===');
+    console.log('\n=== HOOKS DEMONSTRATION ===');
     
     // Add some items back for hooks demo
-    console.log('\n6️⃣ Adding items back for hooks demonstration:');
+    console.log('\nAdding items back for hooks demonstration:');
     const newTasks = [
       { id: 9, type: 'email', recipient: 'admin@example.com', subject: 'System alert' },
       { id: 10, type: 'sms', recipient: '+9998887776', message: 'Maintenance notice' }
@@ -123,14 +123,14 @@ async function popOperationsExample() {
     }
 
     // Pop with hooks
-    console.log('\n7️⃣ Popping with before/after hooks:');
+    console.log('\nPopping with before/after hooks:');
     const poppedWithHooks = await queueManager.popFromQueue(queueId, {
       actions: {
         beforeAction: async (queueId, data) => {
-          console.log(`   🔧 Before hook: About to pop from queue ${queueId}`);
+          console.log(`   Before hook: About to pop from queue ${queueId}`);
         },
         afterAction: async (queueId, data) => {
-          console.log(`   🔧 After hook: Successfully popped from queue ${queueId}`);
+          console.log(`   After hook: Successfully popped from queue ${queueId}`);
         }
       }
     });
@@ -141,19 +141,19 @@ async function popOperationsExample() {
 
     // Final queue statistics
     const finalStats = await queueManager.getQueueStats(queueId);
-    console.log(`\n📊 Final Queue Stats: ${finalStats.itemCount} items total`);
+    console.log(`\nFinal Queue Stats: ${finalStats.itemCount} items total`);
 
     // Clean up
     await queueManager.deleteQueue(queueId);
-    console.log('\n🧹 Cleaned up queue');
+    console.log('\nCleaned up queue');
 
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('Error:', error.message);
     console.error('Stack trace:', error.stack);
   } finally {
     // Graceful shutdown
     await queueManager.close();
-    console.log('\n👋 Disconnected from Redis');
+    console.log('\nDisconnected from Redis');
   }
 }
 

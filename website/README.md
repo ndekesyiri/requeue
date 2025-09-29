@@ -2,7 +2,7 @@
 
 A futuristic, developer-focused single-page website for the QueueManager project. Built with modern web technologies and designed for GitHub Pages hosting.
 
-## 🎨 Design Features
+## Design Features
 
 - **Futuristic Dark Theme**: Space-inspired color palette with neon accents
 - **Particle Background**: Animated floating particles for visual appeal
@@ -11,7 +11,7 @@ A futuristic, developer-focused single-page website for the QueueManager project
 - **TypeScript Support**: Highlights the project's TypeScript capabilities
 - **Performance Focused**: Optimized for speed and user experience
 
-## 🚀 Technologies Used
+## Technologies Used
 
 - **HTML5**: Semantic markup with accessibility in mind
 - **CSS3**: Modern CSS with custom properties, Grid, and Flexbox
@@ -20,7 +20,7 @@ A futuristic, developer-focused single-page website for the QueueManager project
 - **AOS**: Animate On Scroll library for smooth animations
 - **Custom Animations**: Hand-crafted CSS animations and transitions
 
-## 📁 File Structure
+## File Structure
 
 ```
 website/
@@ -30,7 +30,7 @@ website/
 └── README.md           # This file
 ```
 
-## 🎯 Key Sections
+## Key Sections
 
 1. **Hero Section**: Animated queue visualization with performance stats
 2. **Features**: 6 key features with interactive cards and code examples
@@ -39,7 +39,7 @@ website/
 5. **Performance**: Animated performance metrics and statistics
 6. **Footer**: Links and project information
 
-## 🎨 Color Palette
+## Color Palette
 
 - **Primary**: Electric Blue (#00d4ff)
 - **Secondary**: Neon Green (#00ff88)
@@ -48,7 +48,7 @@ website/
 - **Surface**: Dark Gray (#1a1a1a)
 - **Text**: Light Gray (#e5e5e5)
 
-## ⚡ Interactive Features
+## Interactive Features
 
 - **Animated Counters**: Statistics that count up on scroll
 - **Queue Demo**: Animated queue items with progress bars
@@ -57,7 +57,7 @@ website/
 - **Copy to Clipboard**: Code blocks with copy functionality
 - **Responsive Navigation**: Mobile-friendly navigation
 
-## 🚀 Deployment
+## Deployment
 
 ### GitHub Pages
 
@@ -83,14 +83,14 @@ npx serve .
 php -S localhost:8000
 ```
 
-## 📱 Responsive Design
+## Responsive Design
 
 The website is fully responsive with breakpoints at:
 - **Mobile**: 480px and below
 - **Tablet**: 768px and below
 - **Desktop**: 769px and above
 
-## 🎭 Animations
+## Animations
 
 - **Particle Background**: Floating particles with random colors
 - **Hero Title**: Typewriter effect with staggered animation
@@ -99,7 +99,7 @@ The website is fully responsive with breakpoints at:
 - **Counters**: Animated number counting on scroll
 - **Smooth Transitions**: All interactions have smooth transitions
 
-## 🔧 Customization
+## Customization
 
 ### Colors
 Update the CSS custom properties in `:root`:
@@ -123,7 +123,7 @@ Update the CSS custom properties in `:root`:
 - Minify CSS and JavaScript
 - Use a CDN for external libraries
 
-## 📊 Performance Features
+## Performance Features
 
 - **Lazy Loading**: Images and animations load on scroll
 - **Optimized Animations**: Hardware-accelerated CSS animations
@@ -131,7 +131,7 @@ Update the CSS custom properties in `:root`:
 - **Minimal Dependencies**: Only essential external libraries
 - **Fast Loading**: Optimized assets and efficient code
 
-## 🎯 SEO Optimization
+## SEO Optimization
 
 - **Meta Tags**: Comprehensive meta tags for social sharing
 - **Structured Data**: Semantic HTML for better indexing
@@ -139,7 +139,7 @@ Update the CSS custom properties in `:root`:
 - **Mobile-First**: Responsive design for mobile users
 - **Accessibility**: WCAG compliant design
 
-## 🚀 Future Enhancements
+## Future Enhancements
 
 - **Dark/Light Mode Toggle**: Theme switching capability
 - **More Interactive Demos**: Additional demo scenarios
@@ -148,11 +148,11 @@ Update the CSS custom properties in `:root`:
 - **Analytics**: User behavior tracking
 - **PWA Features**: Offline capability and app-like experience
 
-## 📝 License
+## License
 
 This website is part of the QueueManager project and follows the same MIT license.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -160,7 +160,7 @@ This website is part of the QueueManager project and follows the same MIT licens
 4. Test thoroughly
 5. Submit a pull request
 
-## 📞 Support
+## Support
 
 For issues or questions about the website:
 - Create an issue on GitHub

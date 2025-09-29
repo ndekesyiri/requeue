@@ -6,7 +6,7 @@
 const createQueueManager = require('../src/index');
 
 async function advancedFeaturesExample() {
-  console.log('🚀 Starting Advanced Features Example\n');
+  console.log('Starting Advanced Features Example\n');
 
   const queueManager = await createQueueManager({
     redis: {
@@ -27,7 +27,7 @@ async function advancedFeaturesExample() {
     
     // Wait for initialization to complete
     await queueManager.waitForInitialization();
-    console.log('✅ Connected to Redis');
+    console.log('Connected to Redis');
 
     // Create processing queue (or use existing one)
     try {
@@ -35,22 +35,22 @@ async function advancedFeaturesExample() {
         description: 'High-priority task processing queue',
         priority: 'high'
       });
-      console.log('📦 Created new queue: tasks');
+      console.log('Created new queue: tasks');
     } catch (error) {
       if (error.message.includes('already exists')) {
-        console.log('📦 Using existing queue: tasks');
+        console.log('Using existing queue: tasks');
       } else {
         throw error;
       }
     }
 
     // Set up event listeners
-    console.log('📡 Setting up event listeners...');
+    console.log('Setting up event listeners...');
     
     const taskListener = queueManager.listen('tasks');
     if (taskListener) {
       taskListener.on('change', (event) => {
-        console.log(`🔔 Event: ${event.eventType} - ${event.queueId}`);
+        console.log(`Event: ${event.eventType} - ${event.queueId}`);
       });
     }
 
@@ -58,7 +58,7 @@ async function advancedFeaturesExample() {
     if (queueManager.eventEmitter) {
       queueManager.eventEmitter.on('queueChange', (event) => {
         if (event.eventType.includes('error')) {
-          console.log(`⚠️  Error Event: ${event.error}`);
+          console.log(`Error Event: ${event.error}`);
         }
       });
     }
@@ -67,7 +67,7 @@ async function advancedFeaturesExample() {
     const hooks = {
       beforeAction: [
         async (item, queueId, context) => {
-          console.log(`🎣 Before ${context.operation}: ${item.id || 'new item'}`);
+          console.log(`Before ${context.operation}: ${item.id || 'new item'}`);
           if (context.operation === 'addToQueue') {
             item.data.startTime = Date.now();
           }
@@ -75,16 +75,16 @@ async function advancedFeaturesExample() {
       ],
       afterAction: [
         async (item, queueId, context) => {
-          console.log(`🎣 After ${context.operation}: ${item.id}`);
+          console.log(`After ${context.operation}: ${item.id}`);
           if (context.operation === 'addToQueue') {
-            console.log(`   📊 Item added with priority: ${item.data.priority}`);
+            console.log(`   Item added with priority: ${item.data.priority}`);
           }
         }
       ]
     };
 
     // Add items with different priorities and hooks
-    console.log('\n📝 Adding items with priorities and hooks...');
+    console.log('\nAdding items with priorities and hooks...');
     const tasks = [
       { name: 'Database backup', priority: 10, category: 'maintenance' },
       { name: 'User notification', priority: 5, category: 'communication' },
@@ -98,7 +98,7 @@ async function advancedFeaturesExample() {
     }
 
     // Demonstrate filtering and searching
-    console.log('\n🔍 Filtering and searching...');
+    console.log('\nFiltering and searching...');
     
     const highPriorityTasks = await queueManager.filterItems('tasks', 
       item => item.data.priority >= 7
@@ -111,7 +111,7 @@ async function advancedFeaturesExample() {
     console.log(`Found maintenance task: ${maintenanceTask.data.name}`);
 
     // Demonstrate batch status updates
-    console.log('\n📦 Batch operations...');
+    console.log('\nBatch operations...');
     const allItems = await queueManager.getQueueItems('tasks');
     
     if (allItems && allItems.length > 0) {
@@ -124,7 +124,7 @@ async function advancedFeaturesExample() {
     }
 
     // Requeue items with different priorities
-    console.log('\n🔄 Requeuing with priority...');
+    console.log('\nRequeuing with priority...');
     if (allItems.length > 0) {
       await queueManager.requeueItem('tasks', allItems[0].id, {
         position: 'head',
@@ -137,7 +137,7 @@ async function advancedFeaturesExample() {
     }
 
     // Demonstrate item lifecycle management
-    console.log('\n🔄 Item lifecycle management...');
+    console.log('\nItem lifecycle management...');
     let processedItems = 0;
     
     while (processedItems < 3) {
@@ -153,9 +153,9 @@ async function advancedFeaturesExample() {
       const success = Math.random() > 0.2; // 80% success rate
       
       if (success) {
-        console.log(`  ✅ Completed: ${item.data.name}`);
+        console.log(`  Completed: ${item.data.name}`);
       } else {
-        console.log(`  ❌ Failed: ${item.data.name}, requeuing...`);
+        console.log(`  Failed: ${item.data.name}, requeuing...`);
         await queueManager.requeueItem('tasks', item.id, {
           position: 'tail',
           delay: 1000,
@@ -169,7 +169,7 @@ async function advancedFeaturesExample() {
     }
 
     // Get comprehensive statistics
-    console.log('\n📊 Performance Statistics...');
+    console.log('\nPerformance Statistics...');
     const queueStats = await queueManager.getQueueStats('tasks');
     console.log('Queue Statistics:');
     console.log(`  - Total items: ${queueStats.items.total}`);
@@ -188,7 +188,7 @@ async function advancedFeaturesExample() {
     console.log(`  - Memory usage: ${JSON.stringify(health.memory)}`);
 
     // Move items between queues
-    console.log('\n🔀 Moving items between queues...');
+    console.log('\nMoving items between queues...');
     
     // Create another queue
     await queueManager.createQueue('Archive-Queue', 'archive', {
@@ -204,7 +204,7 @@ async function advancedFeaturesExample() {
     }
 
     // Final statistics
-    console.log('\n📈 Final Performance Metrics...');
+    console.log('\nFinal Performance Metrics...');
     const finalStats = queueManager.getCacheStats();
     if (finalStats.enabled) {
       console.log('Final Cache Performance:');
@@ -214,20 +214,20 @@ async function advancedFeaturesExample() {
     }
 
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('Error:', error.message);
     console.error(error.stack);
   } finally {
     // Cleanup
     try {
       await queueManager.deleteQueue('tasks');
       await queueManager.deleteQueue('archive');
-      console.log('🧹 Cleaned up queues');
+      console.log('Cleaned up queues');
     } catch (error) {
-      console.warn('⚠️  Cleanup warning:', error.message);
+      console.warn('Cleanup warning:', error.message);
     }
 
     await queueManager.close({ forceSyncCache: true });
-    console.log('👋 Gracefully shut down');
+    console.log('Gracefully shut down');
   }
 }
 

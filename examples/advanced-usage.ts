@@ -17,7 +17,7 @@ interface TaskItem extends QueueItem {
 }
 
 async function advancedFeaturesExample(): Promise<void> {
-  console.log('🚀 Starting Advanced Features Example (TypeScript)\n');
+  console.log('Starting Advanced Features Example (TypeScript)\n');
 
   const queueManager: QueueManagerInterface = await createQueueManager({
     redis: {
@@ -35,7 +35,7 @@ async function advancedFeaturesExample(): Promise<void> {
   try {
     // Wait for initialization to complete
     await queueManager.waitForInitialization();
-    console.log('✅ Connected to Redis');
+    console.log('Connected to Redis');
 
     // Create processing queue (or use existing one)
     try {
@@ -43,22 +43,22 @@ async function advancedFeaturesExample(): Promise<void> {
         description: 'High-priority task processing queue',
         priority: 'high'
       });
-      console.log('📦 Created new queue: tasks');
+      console.log('Created new queue: tasks');
     } catch (error: any) {
       if (error.message.includes('already exists')) {
-        console.log('📦 Using existing queue: tasks');
+        console.log('Using existing queue: tasks');
       } else {
         throw error;
       }
     }
 
     // Set up event listeners with type safety
-    console.log('📡 Setting up event listeners...');
+    console.log('Setting up event listeners...');
     
     const taskListener = queueManager.listen('tasks');
     if (taskListener) {
       taskListener.on('change', (event) => {
-        console.log(`🔔 Event: ${event.eventType} - ${event.queueId}`);
+        console.log(`Event: ${event.eventType} - ${event.queueId}`);
       });
     }
 
@@ -66,7 +66,7 @@ async function advancedFeaturesExample(): Promise<void> {
     if (queueManager.eventEmitter) {
       queueManager.eventEmitter.on('queueChange', (event: any) => {
         if (event.eventType.includes('error')) {
-          console.log(`⚠️  Error Event: ${event.error}`);
+          console.log(`Error Event: ${event.error}`);
         }
       });
     }
@@ -75,7 +75,7 @@ async function advancedFeaturesExample(): Promise<void> {
     const hooks = {
       beforeAction: [
         async (item: TaskItem, queueId: string, context: any) => {
-          console.log(`🎣 Before ${context.operation}: ${item.id || 'new item'}`);
+          console.log(`Before ${context.operation}: ${item.id || 'new item'}`);
           if (context.operation === 'addToQueue') {
             item.data.startTime = Date.now();
           }
@@ -83,16 +83,16 @@ async function advancedFeaturesExample(): Promise<void> {
       ],
       afterAction: [
         async (item: TaskItem, queueId: string, context: any) => {
-          console.log(`🎣 After ${context.operation}: ${item.id}`);
+          console.log(`After ${context.operation}: ${item.id}`);
           if (context.operation === 'addToQueue') {
-            console.log(`   📊 Item added with priority: ${item.data.priority}`);
+            console.log(`   Item added with priority: ${item.data.priority}`);
           }
         }
       ]
     };
 
     // Add items with different priorities and hooks
-    console.log('\n📝 Adding items with priorities and hooks...');
+    console.log('\nAdding items with priorities and hooks...');
     const tasks: TaskData[] = [
       { name: 'Database backup', priority: 10, category: 'maintenance' },
       { name: 'User notification', priority: 5, category: 'communication' },
@@ -107,7 +107,7 @@ async function advancedFeaturesExample(): Promise<void> {
     }
 
     // Demonstrate filtering and searching with type safety
-    console.log('\n🔍 Filtering and searching...');
+    console.log('\nFiltering and searching...');
     
     const highPriorityTasks = await queueManager.filterItems('tasks', 
       (item: TaskItem) => item.data.priority >= 7
@@ -122,7 +122,7 @@ async function advancedFeaturesExample(): Promise<void> {
     }
 
     // Demonstrate batch status updates
-    console.log('\n📦 Batch operations...');
+    console.log('\nBatch operations...');
     const allItems: TaskItem[] = await queueManager.getQueueItems('tasks');
     
     if (allItems && allItems.length > 0) {
@@ -135,7 +135,7 @@ async function advancedFeaturesExample(): Promise<void> {
     }
 
     // Requeue items with different priorities
-    console.log('\n🔄 Requeuing with priority...');
+    console.log('\nRequeuing with priority...');
     if (allItems && allItems.length > 0) {
       const firstItem = allItems[0];
       if (firstItem) {
@@ -151,7 +151,7 @@ async function advancedFeaturesExample(): Promise<void> {
     }
 
     // Demonstrate item lifecycle management
-    console.log('\n🔄 Item lifecycle management...');
+    console.log('\nItem lifecycle management...');
     let processedItems = 0;
     
     while (processedItems < 3) {
@@ -168,9 +168,9 @@ async function advancedFeaturesExample(): Promise<void> {
       const success = Math.random() > 0.2; // 80% success rate
       
       if (success) {
-        console.log(`  ✅ Completed: ${taskItem.data.name}`);
+        console.log(`  Completed: ${taskItem.data.name}`);
       } else {
-        console.log(`  ❌ Failed: ${taskItem.data.name}, requeuing...`);
+        console.log(`  Failed: ${taskItem.data.name}, requeuing...`);
         await queueManager.requeueItem('tasks', taskItem.id, {
           position: 'tail',
           delay: 1000,
@@ -184,7 +184,7 @@ async function advancedFeaturesExample(): Promise<void> {
     }
 
     // Get comprehensive statistics with proper typing
-    console.log('\n📊 Performance Statistics...');
+    console.log('\nPerformance Statistics...');
     const queueStats: QueueStats = await queueManager.getQueueStats('tasks');
     console.log('Queue Statistics:');
     console.log(`  - Total items: ${queueStats.items.total}`);
@@ -203,7 +203,7 @@ async function advancedFeaturesExample(): Promise<void> {
     console.log(`  - Memory usage: ${JSON.stringify(health.memory)}`);
 
     // Move items between queues
-    console.log('\n🔀 Moving items between queues...');
+    console.log('\nMoving items between queues...');
     
     // Create another queue
     await queueManager.createQueue('Archive-Queue', 'archive', {
@@ -222,7 +222,7 @@ async function advancedFeaturesExample(): Promise<void> {
     }
 
     // Final statistics
-    console.log('\n📈 Final Performance Metrics...');
+    console.log('\nFinal Performance Metrics...');
     const finalStats: CacheStats = queueManager.getCacheStats();
     if (finalStats.enabled) {
       console.log('Final Cache Performance:');
@@ -232,20 +232,20 @@ async function advancedFeaturesExample(): Promise<void> {
     }
 
   } catch (error: any) {
-    console.error('❌ Error:', error.message);
+    console.error('Error:', error.message);
     console.error(error.stack);
   } finally {
     // Cleanup
     try {
       await queueManager.deleteQueue('tasks');
       await queueManager.deleteQueue('archive');
-      console.log('🧹 Cleaned up queues');
+      console.log('Cleaned up queues');
     } catch (error: any) {
-      console.warn('⚠️  Cleanup warning:', error.message);
+      console.warn('Cleanup warning:', error.message);
     }
 
     await queueManager.close({ forceSyncCache: true });
-    console.log('👋 Gracefully shut down');
+    console.log('Gracefully shut down');
   }
 }
 

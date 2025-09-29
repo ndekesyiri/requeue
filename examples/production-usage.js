@@ -33,7 +33,7 @@ class ProductionWorker {
   }
 
   async initialize() {
-    console.log(`🚀 Initializing ${this.config.workerName}...`);
+    console.log(`Initializing ${this.config.workerName}...`);
 
     this.queueManager = createQueueManager({
       redis: {
@@ -70,7 +70,7 @@ class ProductionWorker {
     // Setup queue if it doesn't exist
     try {
       await this.queueManager.getQueue(this.config.queueId);
-      console.log(`📦 Connected to existing queue: ${this.config.queueId}`);
+      console.log(`Connected to existing queue: ${this.config.queueId}`);
     } catch (error) {
       if (error.message.includes('not found')) {
         await this.queueManager.createQueue('Production Tasks', this.config.queueId, {
@@ -78,7 +78,7 @@ class ProductionWorker {
           worker: this.config.workerName,
           createdBy: 'production-worker'
         });
-        console.log(`📦 Created queue: ${this.config.queueId}`);
+        console.log(`Created queue: ${this.config.queueId}`);
       } else {
         throw error;
       }
@@ -90,7 +90,7 @@ class ProductionWorker {
     // Start health monitoring
     this.startHealthMonitoring();
 
-    console.log(`✅ ${this.config.workerName} initialized successfully`);
+    console.log(`${this.config.workerName} initialized successfully`);
   }
 
   setupEventListeners() {
@@ -98,32 +98,32 @@ class ProductionWorker {
     
     queueListener.on('change', (event) => {
       if (event.eventType === 'item:added') {
-        console.log(`📥 New item added to queue: ${event.item.id}`);
+        console.log(`New item added to queue: ${event.item.id}`);
       }
     });
 
     // Global error handling
     this.queueManager.eventEmitter.on('queueChange', (event) => {
       if (event.eventType.includes('error')) {
-        console.error(`⚠️  Queue error: ${event.error}`);
+        console.error(`Queue error: ${event.error}`);
       }
     });
   }
 
   async start() {
     if (this.isRunning) {
-      console.log('⚠️  Worker is already running');
+      console.log('Worker is already running');
       return;
     }
 
-    console.log(`🎬 Starting ${this.config.workerName}...`);
+    console.log(`Starting ${this.config.workerName}...`);
     this.isRunning = true;
     this.stats.startTime = Date.now();
 
     // Start processing loop
     this.processLoop();
 
-    console.log(`🔄 ${this.config.workerName} is now processing tasks`);
+    console.log(`${this.config.workerName} is now processing tasks`);
   }
 
   async processLoop() {
@@ -146,11 +146,11 @@ class ProductionWorker {
 
         // Process item asynchronously
         this.processItem(item).catch(error => {
-          console.error(`❌ Unhandled error processing item ${item.id}:`, error.message);
+          console.error(`Unhandled error processing item ${item.id}:`, error.message);
         });
 
       } catch (error) {
-        console.error('❌ Error in process loop:', error.message);
+        console.error('Error in process loop:', error.message);
         await new Promise(resolve => setTimeout(resolve, 5000)); // Wait before retrying
       }
     }
@@ -160,7 +160,7 @@ class ProductionWorker {
     const jobId = `${item.id}-${Date.now()}`;
     this.activeJobs.set(jobId, { item, startTime: Date.now() });
 
-    console.log(`🎯 Processing item ${item.id}: ${item.data.type || 'unknown'}`);
+    console.log(`Processing item ${item.id}: ${item.data.type || 'unknown'}`);
 
     try {
       // Mark as processing
@@ -181,10 +181,10 @@ class ProductionWorker {
       });
 
       this.stats.processed++;
-      console.log(`✅ Completed item ${item.id}`);
+      console.log(`Completed item ${item.id}`);
 
     } catch (error) {
-      console.error(`❌ Failed to process item ${item.id}:`, error.message);
+      console.error(`Failed to process item ${item.id}:`, error.message);
       
       // Handle retry logic
       await this.handleRetry(item, error);
@@ -220,7 +220,7 @@ class ProductionWorker {
   }
 
   async processEmail(data) {
-    console.log(`📧 Processing email: ${data.subject || 'No subject'}`);
+    console.log(`Processing email: ${data.subject || 'No subject'}`);
     
     // Simulate email processing
     await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 500));
@@ -232,7 +232,7 @@ class ProductionWorker {
   }
 
   async processImage(data) {
-    console.log(`🖼️  Processing image: ${data.filename || 'unknown'}`);
+    console.log(`Processing image: ${data.filename || 'unknown'}`);
     
     // Simulate image processing
     await new Promise(resolve => setTimeout(resolve, Math.random() * 5000 + 1000));
@@ -243,7 +243,7 @@ class ProductionWorker {
   }
 
   async generateReport(data) {
-    console.log(`📊 Generating report: ${data.reportType || 'unknown'}`);
+    console.log(`Generating report: ${data.reportType || 'unknown'}`);
     
     // Simulate report generation
     await new Promise(resolve => setTimeout(resolve, Math.random() * 3000 + 1000));
@@ -254,7 +254,7 @@ class ProductionWorker {
   }
 
   async sendWebhook(data) {
-    console.log(`🔗 Sending webhook to: ${data.url || 'unknown'}`);
+    console.log(`Sending webhook to: ${data.url || 'unknown'}`);
     
     // Simulate webhook sending
     await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 200));
@@ -268,7 +268,7 @@ class ProductionWorker {
     const retryCount = (item.retryCount || 0) + 1;
     
     if (retryCount <= this.config.retryAttempts) {
-      console.log(`🔄 Retrying item ${item.id} (attempt ${retryCount}/${this.config.retryAttempts})`);
+      console.log(`Retrying item ${item.id} (attempt ${retryCount}/${this.config.retryAttempts})`);
       
       // Update item with retry information
       await this.queueManager.updateItem(this.config.queueId, item.id, {
@@ -289,7 +289,7 @@ class ProductionWorker {
 
       this.stats.retried++;
     } else {
-      console.error(`💀 Item ${item.id} failed permanently after ${this.config.retryAttempts} attempts`);
+      console.error(`Item ${item.id} failed permanently after ${this.config.retryAttempts} attempts`);
       
       await this.queueManager.updateItem(this.config.queueId, item.id, {
         status: 'failed',
@@ -310,18 +310,18 @@ class ProductionWorker {
         
         const uptime = Math.round((Date.now() - this.stats.startTime) / 1000);
         
-        console.log(`📊 Health Check - ${this.config.workerName}`);
+        console.log(`Health Check - ${this.config.workerName}`);
         console.log(`   Uptime: ${uptime}s | Active Jobs: ${this.activeJobs.size}`);
         console.log(`   Processed: ${this.stats.processed} | Failed: ${this.stats.failed} | Retried: ${this.stats.retried}`);
         console.log(`   Queue Size: ${queueStats.items.total} | Redis: ${health.status}`);
         console.log(`   Cache Hit Rate: ${health.cache.enabled ? health.cache.hitRate + '%' : 'disabled'}`);
 
         if (health.status !== 'healthy') {
-          console.error('⚠️  System health check failed!', health);
+          console.error('System health check failed!', health);
         }
 
       } catch (error) {
-        console.error('❌ Health check failed:', error.message);
+        console.error('Health check failed:', error.message);
       }
     }, this.config.healthCheckInterval);
   }
@@ -331,18 +331,18 @@ class ProductionWorker {
     
     signals.forEach(signal => {
       process.on(signal, () => {
-        console.log(`\n📡 Received ${signal}, starting graceful shutdown...`);
+        console.log(`\nReceived ${signal}, starting graceful shutdown...`);
         this.gracefulShutdown();
       });
     });
 
     process.on('uncaughtException', (error) => {
-      console.error('💥 Uncaught Exception:', error);
+      console.error('Uncaught Exception:', error);
       process.exit(1);
     });
 
     process.on('unhandledRejection', (reason, promise) => {
-      console.error('💥 Unhandled Rejection at:', promise, 'reason:', reason);
+      console.error('Unhandled Rejection at:', promise, 'reason:', reason);
       process.exit(1);
     });
   }
@@ -350,18 +350,18 @@ class ProductionWorker {
   async gracefulShutdown() {
     if (!this.isRunning) return;
 
-    console.log('🛑 Stopping worker...');
+    console.log('Stopping worker...');
     this.isRunning = false;
 
     // Wait for active jobs to complete
     const shutdownStart = Date.now();
     while (this.activeJobs.size > 0 && Date.now() - shutdownStart < this.config.shutdownTimeout) {
-      console.log(`⏳ Waiting for ${this.activeJobs.size} active jobs to complete...`);
+      console.log(`Waiting for ${this.activeJobs.size} active jobs to complete...`);
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     if (this.activeJobs.size > 0) {
-      console.warn(`⚠️  Forcing shutdown with ${this.activeJobs.size} active jobs`);
+      console.warn(`Forcing shutdown with ${this.activeJobs.size} active jobs`);
     }
 
     // Close queue manager
@@ -369,7 +369,7 @@ class ProductionWorker {
       await this.queueManager.close({ forceSyncCache: true });
     }
 
-    console.log('👋 Worker shutdown complete');
+    console.log('Worker shutdown complete');
     process.exit(0);
   }
 
@@ -399,7 +399,7 @@ async function runProductionWorker() {
     await new Promise(() => {});
     
   } catch (error) {
-    console.error('💥 Worker failed to start:', error.message);
+    console.error('Worker failed to start:', error.message);
     process.exit(1);
   }
 }

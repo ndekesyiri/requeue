@@ -4,12 +4,12 @@ QueueManager now has full TypeScript support while maintaining complete JavaScri
 
 ## Features
 
-- ✅ **Full Type Safety**: Complete type definitions for all classes, interfaces, and methods
-- ✅ **IntelliSense Support**: Full autocomplete and IntelliSense in TypeScript editors
-- ✅ **Runtime Compatibility**: Works with existing JavaScript code without changes
-- ✅ **Flexible Configuration**: Type-safe configuration objects
-- ✅ **Event System**: Typed event listeners and emitters
-- ✅ **Error Handling**: Typed error classes and error handling
+- **Full Type Safety**: Complete type definitions for all classes, interfaces, and methods
+- **IntelliSense Support**: Full autocomplete and IntelliSense in TypeScript editors
+- **Runtime Compatibility**: Works with existing JavaScript code without changes
+- **Flexible Configuration**: Type-safe configuration objects
+- **Event System**: Typed event listeners and emitters
+- **Error Handling**: Typed error classes and error handling
 
 ## Installation
 
@@ -270,11 +270,11 @@ console.log(item.data.name); // Fully typed!
 
 ## Compatibility
 
-- ✅ **Node.js**: 14+ (with TypeScript 4.5+)
-- ✅ **JavaScript**: Full backward compatibility
-- ✅ **TypeScript**: 4.5+ recommended
-- ✅ **IDEs**: VS Code, WebStorm, etc.
-- ✅ **Build Tools**: Webpack, Rollup, etc.
+- **Node.js**: 14+ (with TypeScript 4.5+)
+- **JavaScript**: Full backward compatibility
+- **TypeScript**: 4.5+ recommended
+- **IDEs**: VS Code, WebStorm, etc.
+- **Build Tools**: Webpack, Rollup, etc.
 
 ## Troubleshooting
 
