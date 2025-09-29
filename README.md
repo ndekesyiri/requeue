@@ -1,172 +1,252 @@
-# QueueManager Website
+# ReQueue - Redis-Powered Queue Management
 
-A futuristic, developer-focused single-page website for the QueueManager project. Built with modern web technologies and designed for GitHub Pages hosting.
+A lightweight, high-performance Node.js queue management system built on Redis with advanced caching, event-driven architecture, and TypeScript support.
 
-## Design Features
+## 🚀 Features
 
-- **Futuristic Dark Theme**: Space-inspired color palette with neon accents
-- **Particle Background**: Animated floating particles for visual appeal
-- **Interactive Demo**: Live terminal simulation with different examples
-- **Responsive Design**: Mobile-first approach with smooth animations
-- **TypeScript Support**: Highlights the project's TypeScript capabilities
-- **Performance Focused**: Optimized for speed and user experience
+- **Redis-Powered**: Built on Redis for high performance and reliability
+- **Advanced Caching**: LRU cache with write-through/write-back strategies
+- **Event-Driven**: Comprehensive event system with hooks and listeners
+- **TypeScript Support**: Full type definitions and IntelliSense support
+- **Multi-Queue Management**: Create, manage, and monitor multiple queues
+- **Batch Operations**: Efficient bulk operations for high throughput
+- **Performance Monitoring**: Built-in metrics and health checks
+- **Enterprise Ready**: Production-ready with error handling and logging
 
-## Technologies Used
-
-- **HTML5**: Semantic markup with accessibility in mind
-- **CSS3**: Modern CSS with custom properties, Grid, and Flexbox
-- **JavaScript**: Vanilla JS with ES6+ features
-- **Prism.js**: Syntax highlighting for code blocks
-- **AOS**: Animate On Scroll library for smooth animations
-- **Custom Animations**: Hand-crafted CSS animations and transitions
-
-## File Structure
-
-```
-website/
-├── index.html          # Main HTML file
-├── styles.css          # All CSS styles
-├── script.js           # JavaScript functionality
-└── README.md           # This file
-```
-
-## Key Sections
-
-1. **Hero Section**: Animated queue visualization with performance stats
-2. **Features**: 6 key features with interactive cards and code examples
-3. **Live Demo**: Interactive terminal with different demo scenarios
-4. **Installation**: Tabbed installation instructions for different package managers
-5. **Performance**: Animated performance metrics and statistics
-6. **Footer**: Links and project information
-
-## Color Palette
-
-- **Primary**: Electric Blue (#00d4ff)
-- **Secondary**: Neon Green (#00ff88)
-- **Accent**: Purple (#8b5cf6)
-- **Background**: Space Black (#0a0a0a)
-- **Surface**: Dark Gray (#1a1a1a)
-- **Text**: Light Gray (#e5e5e5)
-
-## Interactive Features
-
-- **Animated Counters**: Statistics that count up on scroll
-- **Queue Demo**: Animated queue items with progress bars
-- **Live Terminal**: Interactive demo with different scenarios
-- **Smooth Scrolling**: Navigation with smooth scroll behavior
-- **Copy to Clipboard**: Code blocks with copy functionality
-- **Responsive Navigation**: Mobile-friendly navigation
-
-## Deployment
-
-### GitHub Pages
-
-1. Push the website files to your repository
-2. Enable GitHub Pages in repository settings
-3. Select source branch (usually `main` or `gh-pages`)
-4. Your site will be available at `https://username.github.io/repository-name`
-
-### Local Development
-
-1. Clone the repository
-2. Navigate to the website directory
-3. Open `index.html` in a browser or use a local server:
+## 📦 Installation
 
 ```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node.js
-npx serve .
-
-# Using PHP
-php -S localhost:8000
+npm install re-queuejs
 ```
 
-## Responsive Design
+## 🎯 Quick Start
 
-The website is fully responsive with breakpoints at:
-- **Mobile**: 480px and below
-- **Tablet**: 768px and below
-- **Desktop**: 769px and above
+### Basic Usage
 
-## Animations
+```javascript
+const { createQueueManager } = require('re-queuejs');
 
-- **Particle Background**: Floating particles with random colors
-- **Hero Title**: Typewriter effect with staggered animation
-- **Feature Cards**: Hover effects with glow and transform
-- **Queue Demo**: Animated queue items with progress bars
-- **Counters**: Animated number counting on scroll
-- **Smooth Transitions**: All interactions have smooth transitions
+async function main() {
+  // Create queue manager
+  const queueManager = await createQueueManager({
+    redis: {
+      host: 'localhost',
+      port: 6379
+    }
+  });
 
-## Customization
+  // Create a queue
+  await queueManager.createQueue('Email Queue', 'email-queue');
 
-### Colors
-Update the CSS custom properties in `:root`:
+  // Add items to queue
+  await queueManager.addToQueue('email-queue', {
+    to: 'user@example.com',
+    subject: 'Welcome!',
+    body: 'Welcome to our service'
+  });
 
-```css
-:root {
-    --primary: #00d4ff;
-    --secondary: #00ff88;
-    --accent: #8b5cf6;
-    /* ... other colors */
+  // Process items
+  const item = await queueManager.popFromQueue('email-queue');
+  console.log('Processing:', item.data);
+
+  // Mark as completed
+  await queueManager.updateItemStatus('email-queue', item.id, 'completed');
 }
 ```
 
-### Content
-- Update the HTML content in `index.html`
-- Modify the demo data in `script.js`
-- Adjust animations in `styles.css`
+### TypeScript Usage
 
-### Performance
-- Optimize images and assets
-- Minify CSS and JavaScript
-- Use a CDN for external libraries
+```typescript
+import { createQueueManager, QueueManagerInterface } from 're-queuejs';
 
-## Performance Features
+interface EmailData {
+  to: string;
+  subject: string;
+  body: string;
+}
 
-- **Lazy Loading**: Images and animations load on scroll
-- **Optimized Animations**: Hardware-accelerated CSS animations
-- **Efficient JavaScript**: Throttled scroll events and optimized selectors
-- **Minimal Dependencies**: Only essential external libraries
-- **Fast Loading**: Optimized assets and efficient code
+async function main(): Promise<void> {
+  const queueManager: QueueManagerInterface = await createQueueManager({
+    redis: {
+      host: 'localhost',
+      port: 6379
+    }
+  });
 
-## SEO Optimization
+  // Type-safe operations
+  await queueManager.createQueue('Email Queue', 'email-queue');
+  
+  const emailData: EmailData = {
+    to: 'user@example.com',
+    subject: 'Welcome!',
+    body: 'Welcome to our service'
+  };
 
-- **Meta Tags**: Comprehensive meta tags for social sharing
-- **Structured Data**: Semantic HTML for better indexing
-- **Performance**: Fast loading times for better rankings
-- **Mobile-First**: Responsive design for mobile users
-- **Accessibility**: WCAG compliant design
+  await queueManager.addToQueue('email-queue', emailData);
+}
+```
 
-## Future Enhancements
+## 🏗️ Architecture
 
-- **Dark/Light Mode Toggle**: Theme switching capability
-- **More Interactive Demos**: Additional demo scenarios
-- **Blog Section**: News and updates
-- **Documentation Integration**: Embedded documentation
-- **Analytics**: User behavior tracking
-- **PWA Features**: Offline capability and app-like experience
+### Core Components
 
-## License
+- **QueueManager**: Main orchestrator managing queues and operations
+- **RedisManager**: Redis connection and command execution
+- **CacheManager**: LRU cache with synchronization strategies
+- **EventManager**: Event-driven architecture with hooks
+- **Operations**: Modular operation handlers (CRUD, batch, monitoring)
 
-This website is part of the QueueManager project and follows the same MIT license.
+### Caching Strategies
 
-## Contributing
+- **Write-Through**: Immediate Redis sync for consistency
+- **Write-Back**: Batched sync for performance
+- **LRU Eviction**: Automatic cache management
+- **Cache Invalidation**: Smart invalidation strategies
+
+## 📊 Performance
+
+- **High Throughput**: Process thousands of items per second
+- **Low Latency**: Sub-millisecond cache operations
+- **Memory Efficient**: Smart caching with automatic eviction
+- **Scalable**: Horizontal scaling with Redis clustering
+
+## 🔧 Configuration
+
+```javascript
+const queueManager = await createQueueManager({
+  redis: {
+    host: 'localhost',
+    port: 6379,
+    password: 'your-password',
+    db: 0
+  },
+  cache: {
+    enabled: true,
+    maxSize: 1000,
+    strategy: 'write-back',
+    syncInterval: 5000
+  },
+  events: {
+    enabled: true,
+    globalEvents: true
+  }
+});
+```
+
+## 📚 API Reference
+
+### Queue Operations
+- `createQueue(name, id, options)` - Create a new queue
+- `getQueue(id)` - Get queue information
+- `updateQueue(id, updates)` - Update queue settings
+- `deleteQueue(id)` - Delete a queue
+
+### Item Operations
+- `addToQueue(queueId, data, options)` - Add item to queue
+- `popFromQueue(queueId)` - Pop single item
+- `popBatchFromQueue(queueId, count)` - Pop multiple items
+- `updateItemStatus(queueId, itemId, status)` - Update item status
+
+### Batch Operations
+- `bulkAddItems(queueId, items)` - Add multiple items
+- `bulkUpdateItemStatus(queueId, updates)` - Update multiple items
+- `bulkDeleteItems(queueId, itemIds)` - Delete multiple items
+
+### Monitoring
+- `getQueueStats(queueId)` - Get queue statistics
+- `getCacheStats()` - Get cache performance
+- `healthCheck()` - System health check
+
+## 🎣 Events & Hooks
+
+### Event Types
+- `item:added` - Item added to queue
+- `item:popped` - Item popped from queue
+- `item:updated` - Item status updated
+- `queue:created` - Queue created
+- `queue:deleted` - Queue deleted
+
+### Hook System
+```javascript
+// Before hooks
+queueManager.on('before:addToQueue', (context) => {
+  console.log('Adding item:', context.item);
+});
+
+// After hooks
+queueManager.on('after:addToQueue', (context) => {
+  console.log('Item added:', context.item.id);
+});
+```
+
+## 🚀 SaaS Platform
+
+This project includes a complete **SaaS platform** in the `/saas` folder:
+
+- **Multi-tenant Architecture**: Complete tenant isolation
+- **API-First Design**: RESTful APIs with authentication
+- **Billing Integration**: Stripe-powered subscription management
+- **Usage Tracking**: Real-time monitoring and analytics
+- **Enterprise Features**: Webhooks, SLA, custom integrations
+
+See `/saas/README.md` for detailed SaaS documentation.
+
+## 📖 Examples
+
+Check the `/examples` folder for comprehensive examples:
+
+- **Basic Usage**: Simple queue operations
+- **Advanced Features**: Events, hooks, batch operations
+- **Production Usage**: Real-world worker implementation
+- **TypeScript Examples**: Type-safe implementations
+
+## 🛠️ Development
+
+### Prerequisites
+- Node.js 18+
+- Redis 6+
+- TypeScript (optional)
+
+### Setup
+```bash
+git clone https://github.com/ndekesyiri/requeue.git
+cd requeue
+npm install
+```
+
+### Testing
+```bash
+npm test
+```
+
+### Building
+```bash
+npm run build
+```
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
+4. Add tests
 5. Submit a pull request
 
-## Support
+## 📞 Support
 
-For issues or questions about the website:
-- Create an issue on GitHub
-- Contact the maintainer
-- Check the documentation
+- **Documentation**: [Full Documentation](https://requeue.com/docs)
+- **Issues**: [GitHub Issues](https://github.com/ndekesyiri/requeue/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/ndekesyiri/requeue/discussions)
+- **Email**: support@requeue.com
+
+## 🌟 Show Your Support
+
+Give a ⭐️ if this project helped you!
 
 ---
 
-**Built with ❤️ for the QueueManager project**
+**Built with ❤️ by [ndekesyiri](https://github.com/ndekesyiri)**
