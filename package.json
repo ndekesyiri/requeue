@@ -1,6 +1,6 @@
 {
   "name": "re-queuejs",
-  "version": "2.0.0",
+  "version": "4.0.0",
   "description": "A lightweight nodejs and redis queue manager",
   "main": "src/index.js",
   "types": "src/index.d.ts",
