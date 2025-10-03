@@ -12,12 +12,38 @@ A lightweight, high-performance Node.js queue management system built on Redis w
 - **Batch Operations**: Efficient bulk operations for high throughput
 - **Performance Monitoring**: Built-in metrics and health checks
 - **Enterprise Ready**: Production-ready with error handling and logging
+- **Real-time Dashboard**: Web interface for monitoring and management
 
 ## Installation
 
 ```bash
 npm install re-queuejs
 ```
+
+## Dashboard
+
+For a real-time web interface to monitor and manage your queues, install the separate ReQueue Dashboard package:
+
+```bash
+# Install globally
+npm install -g requeue-dashboard
+
+# Create new dashboard project
+requeue-dashboard create my-dashboard
+
+# Start dashboard
+cd my-dashboard
+npm start
+```
+
+The dashboard provides:
+- **Real-time Monitoring**: Live statistics and queue status
+- **Web Interface**: Create, manage, and monitor queues
+- **WebSocket Updates**: Instant notifications for all events
+- **Progressive Web App**: Offline capability and mobile support
+- **Security Features**: Authentication and rate limiting
+
+[View Dashboard Documentation](https://github.com/ndekesyiri/requeue-dashboard) | [NPM Package](https://www.npmjs.com/package/requeue-dashboard)
 
 ## Quick Start
 

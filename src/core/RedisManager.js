@@ -520,6 +520,67 @@ class RedisManager {
     return this.connectionPromise;
   }
 
+  // Convenience methods for common Redis operations
+  async zrange(...args) {
+    return this.executeCommand('zrange', ...args);
+  }
+
+  async zrangebyscore(...args) {
+    return this.executeCommand('zrangebyscore', ...args);
+  }
+
+  async zadd(...args) {
+    return this.executeCommand('zadd', ...args);
+  }
+
+  async zrem(...args) {
+    return this.executeCommand('zrem', ...args);
+  }
+
+  async zscore(...args) {
+    return this.executeCommand('zscore', ...args);
+  }
+
+  async zcard(...args) {
+    return this.executeCommand('zcard', ...args);
+  }
+
+  async sadd(...args) {
+    return this.executeCommand('sadd', ...args);
+  }
+
+  async smembers(...args) {
+    return this.executeCommand('smembers', ...args);
+  }
+
+  async sismember(...args) {
+    return this.executeCommand('sismember', ...args);
+  }
+
+  async scard(...args) {
+    return this.executeCommand('scard', ...args);
+  }
+
+  async hincrby(...args) {
+    return this.executeCommand('hincrby', ...args);
+  }
+
+  async hkeys(...args) {
+    return this.executeCommand('hkeys', ...args);
+  }
+
+  async hdel(...args) {
+    return this.executeCommand('hdel', ...args);
+  }
+
+  async pexpire(...args) {
+    return this.executeCommand('pexpire', ...args);
+  }
+
+  pipeline() {
+    return this.redis.pipeline();
+  }
+
   /**
    * Close Redis connection
    */

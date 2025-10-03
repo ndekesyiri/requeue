@@ -151,6 +151,18 @@ class QueueManager {
     const StatsOperations = require('../operations/StatsOperations');
     const BatchOperations = require('../operations/BatchOperations');
     const EventOperations = require('../operations/EventOperations');
+    
+    // Advanced operation modules
+    const SchedulingOperations = require('../operations/SchedulingOperations');
+    const RetryOperations = require('../operations/RetryOperations');
+    const DeadLetterOperations = require('../operations/DeadLetterOperations');
+    const PriorityOperations = require('../operations/PriorityOperations');
+    const DependencyOperations = require('../operations/DependencyOperations');
+    const QueueControlOperations = require('../operations/QueueControlOperations');
+    const TimeoutOperations = require('../operations/TimeoutOperations');
+    const RateLimitOperations = require('../operations/RateLimitOperations');
+    const ValidationOperations = require('../operations/ValidationOperations');
+    const AuditOperations = require('../operations/AuditOperations');
 
     // Apply mixins
     Object.assign(this, QueueOperations);
@@ -162,6 +174,18 @@ class QueueManager {
     Object.assign(this, StatsOperations);
     Object.assign(this, BatchOperations);
     Object.assign(this, EventOperations);
+    
+    // Apply advanced operation mixins
+    Object.assign(this, SchedulingOperations);
+    Object.assign(this, RetryOperations);
+    Object.assign(this, DeadLetterOperations);
+    Object.assign(this, PriorityOperations);
+    Object.assign(this, DependencyOperations);
+    Object.assign(this, QueueControlOperations);
+    Object.assign(this, TimeoutOperations);
+    Object.assign(this, RateLimitOperations);
+    Object.assign(this, ValidationOperations);
+    Object.assign(this, AuditOperations);
 
     // Mix in performance measurement
     this._wrapMethodsWithPerformance();
