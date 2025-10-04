@@ -1,12 +1,7 @@
-/**
- * Advanced Features Example
- * Demonstrates hooks, events, batch operations, and monitoring
- */
-
 const createQueueManager = require('../src/index');
 
-async function advancedFeaturesExample() {
-  console.log('Starting Advanced Features Example\n');
+async function usageExample() {
+  console.log('Starting Usage Example\n');
 
   const queueManager = await createQueueManager({
     redis: {
@@ -233,7 +228,7 @@ async function advancedFeaturesExample() {
 
 // Run the example
 if (require.main === module) {
-  advancedFeaturesExample().catch(console.error);
+  usageExample().catch(console.error);
 }
 
-module.exports = advancedFeaturesExample;
+module.exports = usageExample;

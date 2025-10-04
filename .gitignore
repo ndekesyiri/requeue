@@ -1,5 +1,4 @@
 node_modules/
-support/
 coverage/
 *.log
 .env
@@ -8,6 +7,3 @@ coverage/
 *.swo
 .vscode/
 .idea/
-
-# Private SaaS Platform (not for public repository)
-saas/

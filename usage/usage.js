@@ -1,8 +1,8 @@
 
 const createQueueManager = require('../src/index');
 
-async function basicUsageExample() {
-  console.log('Let start a basic usage example\n');
+async function UsageExample() {
+  console.log('Let start a usage example\n');
 
   // Initialize queue manager
   const queueManager = await createQueueManager({
@@ -71,7 +71,7 @@ async function basicUsageExample() {
 
 // Run the example
 if (require.main === module) {
-  basicUsageExample().catch(console.error);
+  UsageExample().catch(console.error);
 }
 
-module.exports = basicUsageExample;
+module.exports = UsageExample;

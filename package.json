@@ -1,11 +1,11 @@
 {
   "name": "re-queuejs",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "A lightweight nodejs/typescript and redis queue manager",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "directories": {
-    "example": "examples"
+    "example": "usage"
   },
   "files": [
     "src/**/*",
@@ -44,7 +44,7 @@
   "bugs": {
     "url": "https://github.com/ndekesyiri/requeue/issues"
   },
-  "homepage": "https://github.com/ndekesyiri/requeue#readme",
+  "homepage": "https://ndekesyiri.github.io/requeue",
   "devDependencies": {
     "@types/ioredis": "^4.28.10",
     "@types/node": "^24.6.0",

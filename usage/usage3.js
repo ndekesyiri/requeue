@@ -1,14 +1,9 @@
-/**
- * Advanced QueueManager Features Example
- * Demonstrates all the new advanced features implemented
- */
-
 const createQueueManager = require('../src/index');
 
-async function demonstrateAdvancedFeatures() {
-  console.log(' Advanced QueueManager Features Demo\n');
+async function usageDemo() {
+  console.log('Usage Example\n');
 
-  // Initialize QueueManager with advanced configuration
+  // Initialize QueueManager with configuration
   const qm = await createQueueManager({
     redis: {
       host: 'localhost',
@@ -27,13 +22,10 @@ async function demonstrateAdvancedFeatures() {
   });
 
   try {
-    // 1. DELAYED JOBS & SCHEDULING
-    console.log('📅 1. Delayed Jobs & Scheduling');
-    console.log('================================');
-    
-    const queueId = 'advanced-demo-queue';
-    await qm.createQueue('AdvancedDemoQueue', queueId, {
-      description: 'Queue for demonstrating advanced features',
+    // DELAYED JOBS & SCHEDULING
+    const queueId = 'usage3-queue';
+    await qm.createQueue('Usage3Queue', queueId, {
+      description: 'Queue for demonstrating Requeue features',
       maxSize: 10000
     });
 
@@ -52,16 +44,13 @@ async function demonstrateAdvancedFeatures() {
     });
 
     console.log(` Scheduled job: ${scheduledJob.id}`);
-    console.log(`   Execution time: ${new Date(scheduledJob.scheduledFor).toISOString()}`);
+    console.log(` Execution time: ${new Date(scheduledJob.scheduledFor).toISOString()}`);
 
     // Get scheduled jobs
     const scheduledJobs = await qm.getScheduledJobs(queueId);
     console.log(` Found ${scheduledJobs.jobs.length} scheduled jobs\n`);
 
-    // 2. RETRY POLICY & FAILURE HANDLING
-    console.log('🔄 2. Retry Policy & Failure Handling');
-    console.log('=====================================');
-
+    // RETRY POLICY & FAILURE HANDLING
     // Configure retry policy
     const retryPolicy = {
       maxRetries: 3,
@@ -70,10 +59,10 @@ async function demonstrateAdvancedFeatures() {
       maxRetryDelay: 10000,
       retryOn: ['Error', 'TimeoutError'],
       onRetry: (error, attempt, delay) => {
-        console.log(`   🔄 Retry attempt ${attempt} after ${delay}ms: ${error.message}`);
+        console.log(`Retry attempt ${attempt} after ${delay}ms: ${error.message}`);
       },
       onMaxRetries: (error, retryTracking) => {
-        console.log(`    Max retries reached: ${error.message}`);
+        console.log(`Max retries reached: ${error.message}`);
       }
     };
 
@@ -101,10 +90,7 @@ async function demonstrateAdvancedFeatures() {
     const retryStats = await qm.getRetryStats(queueId);
     console.log(` Retry stats: ${retryStats.successfulJobs}/${retryStats.totalJobs} successful\n`);
 
-    // 3. DEAD LETTER QUEUES
-    console.log('💀 3. Dead Letter Queues');
-    console.log('========================');
-
+    // DEAD LETTER QUEUES
     // Create dead letter queue
     const dlq = await qm.createDeadLetterQueue(queueId, {
       maxSize: 1000,
@@ -130,10 +116,7 @@ async function demonstrateAdvancedFeatures() {
     const dlqItems = await qm.getDeadLetterItems(dlq.id);
     console.log(` DLQ contains ${dlqItems.items.length} failed jobs\n`);
 
-    // 4. PRIORITY QUEUES
-    console.log(' 4. Priority Queues');
-    console.log('====================');
-
+    // PRIORITY QUEUES
     // Add jobs with different priorities
     const highPriorityJob = await qm.addToQueueWithPriority(queueId, {
       task: 'urgent-notification',
@@ -174,10 +157,7 @@ async function demonstrateAdvancedFeatures() {
     console.log(` Priority distribution:`, priorityStats.priorityDistribution);
     console.log('');
 
-    // 5. JOB DEPENDENCIES & CHAINING
-    console.log('🔗 5. Job Dependencies & Chaining');
-    console.log('===================================');
-
+    // JOB DEPENDENCIES & CHAINING
     // Create a workflow with dependencies
     const workflowJobs = [
       { id: 'job-1', data: { task: 'validate-input' } },
@@ -210,34 +190,28 @@ async function demonstrateAdvancedFeatures() {
     console.log(` Dependency graph: ${dependencyGraph.nodes.length} nodes, ${dependencyGraph.edges.length} edges`);
     console.log('');
 
-    // 6. QUEUE CONTROL (PAUSE/RESUME)
-    console.log('⏸️ 6. Queue Control');
-    console.log('===================');
-
+    // QUEUE CONTROL (PAUSE/RESUME)
     // Pause the queue
     await qm.pauseQueue(queueId, {
       reason: 'Maintenance window',
       pauseScheduledJobs: true
     });
-    console.log(`⏸️ Queue paused`);
+    console.log(`Queue paused`);
 
     // Try to add a job (should still work, but processing is paused)
     await qm.addToQueue(queueId, { task: 'paused-job' });
-    console.log(`📝 Added job to paused queue`);
+    console.log(`Added job to paused queue`);
 
     // Resume the queue
     await qm.resumeQueue(queueId);
-    console.log(`▶️ Queue resumed`);
+    console.log(`Queue resumed`);
 
     // Get queue control status
     const controlStatus = await qm.getQueueControlStatus(queueId);
     console.log(` Queue status: ${controlStatus.paused ? 'Paused' : 'Active'}`);
     console.log('');
 
-    // 7. JOB TIMEOUTS
-    console.log('⏰ 7. Job Timeouts');
-    console.log('==================');
-
+    // JOB TIMEOUTS
     // Add job with timeout
     const timeoutJob = await qm.addJobWithTimeout(queueId, {
       task: 'long-running-operation',
@@ -250,7 +224,7 @@ async function demonstrateAdvancedFeatures() {
 
     // Simulate job execution with timeout
     const timeoutProcessor = async (data) => {
-      console.log(`   🔄 Processing job: ${data.task}`);
+      console.log(`Processing job: ${data.task}`);
       await new Promise(resolve => setTimeout(resolve, 10000)); // 10 second operation
       return { success: true };
     };
@@ -258,7 +232,7 @@ async function demonstrateAdvancedFeatures() {
     try {
       await qm.executeJobWithTimeout(queueId, timeoutJob.id, timeoutProcessor);
     } catch (error) {
-      console.log(`⏰ Job timed out: ${error.message}`);
+      console.log(`Job timed out: ${error.message}`);
     }
 
     // Check for timed out jobs
@@ -266,10 +240,7 @@ async function demonstrateAdvancedFeatures() {
     console.log(` Found ${timedOutJobs.timedOut.length} timed out jobs`);
     console.log('');
 
-    // 8. RATE LIMITING
-    console.log('🚦 8. Rate Limiting');
-    console.log('===================');
-
+    // RATE LIMITING
     // Configure rate limiting
     await qm.configureRateLimit(queueId, {
       maxJobsPerSecond: 5,
@@ -290,7 +261,7 @@ async function demonstrateAdvancedFeatures() {
           await qm.recordJobExecution(queueId, job.id);
           rapidJobs.push(job.id);
         } else {
-          console.log(`🚦 Rate limit hit: ${rateLimitCheck.reason}`);
+          console.log(`Rate limit hit: ${rateLimitCheck.reason}`);
           break;
         }
       } catch (error) {
@@ -310,10 +281,7 @@ async function demonstrateAdvancedFeatures() {
     });
     console.log('');
 
-    // 9. DATA VALIDATION
-    console.log(' 9. Data Validation');
-    console.log('======================');
-
+    // DATA VALIDATION
     // Configure schema validation
     const schema = {
       type: 'object',
@@ -363,10 +331,7 @@ async function demonstrateAdvancedFeatures() {
     console.log(` Validation stats: ${validationStats.successRate}% success rate`);
     console.log('');
 
-    // 10. AUDIT TRAIL
-    console.log('📝 10. Audit Trail');
-    console.log('==================');
-
+    // AUDIT TRAIL
     // Configure audit trail
     await qm.configureAuditTrail(queueId, {
       enabled: true,
@@ -407,16 +372,13 @@ async function demonstrateAdvancedFeatures() {
       format: 'json',
       includeData: true
     });
-    console.log(`📤 Exported ${auditExport.data.length} audit log entries`);
+    console.log(`Exported ${auditExport.data.length} audit log entries`);
     console.log('');
 
-    // 11. COMPREHENSIVE STATISTICS
-    console.log(' 11. Comprehensive Statistics');
-    console.log('===============================');
-
+    // COMPREHENSIVE STATISTICS
     // Get system-wide statistics
     const systemStats = await qm.getSystemStats();
-    console.log(`🏥 System health:`, {
+    console.log(`System health:`, {
       redis: systemStats.redis.status,
       cache: systemStats.cache.hits,
       performance: systemStats.performance.totalOperations,
@@ -440,17 +402,15 @@ async function demonstrateAdvancedFeatures() {
       audit: await qm.getAuditStats(queueId)
     };
 
-    console.log(` Advanced features summary:`);
+    console.log(`Summary:`);
     console.log(`   - Retry success rate: ${allStats.retry.successRate}%`);
     console.log(`   - Priority levels: ${allStats.priority.priorityLevels.length}`);
     console.log(`   - Rate limit utilization: ${allStats.rateLimit.current.utilizationRate}%`);
     console.log(`   - Validation success rate: ${allStats.validation.successRate}%`);
     console.log(`   - Audit log entries: ${allStats.audit.totalLogs}`);
 
-    console.log('\n Advanced features demonstration completed!');
-
   } catch (error) {
-    console.error(' Error during demonstration:', error.message);
+    console.error(' Error during demo:', error.message);
     console.error(error.stack);
   } finally {
     // Cleanup
@@ -464,9 +424,9 @@ async function demonstrateAdvancedFeatures() {
 
 // Run the demonstration
 if (require.main === module) {
-  demonstrateAdvancedFeatures()
+  usageDemo()
     .then(() => {
-      console.log('\n✨ Demo completed successfully!');
+      console.log('\nDemo completed successfully!');
       process.exit(0);
     })
     .catch((error) => {
@@ -475,5 +435,5 @@ if (require.main === module) {
     });
 }
 
-module.exports = demonstrateAdvancedFeatures;
+module.exports = usageDemo;
 

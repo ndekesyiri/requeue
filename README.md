@@ -2,6 +2,8 @@
 
 A lightweight, high-performance Node.js queue management system built on Redis with advanced caching, event-driven architecture, and TypeScript support.
 
+[Website](https://ndekesyiri.github.io/requeue/)
+
 ## Features
 
 - **Redis-Powered**: Built on Redis for high performance and reliability
@@ -208,7 +210,7 @@ queueManager.on('after:addToQueue', (context) => {
 
 ## Examples
 
-Check the `/examples` folder for comprehensive examples:
+Check the `/usage` folder for comprehensive examples:
 
 - **Basic Usage**: Simple queue operations
 - **Advanced Features**: Events, hooks, batch operations
@@ -263,4 +265,4 @@ Give a star if this project helped you!
 
 ---
 
-**Built with love by [ndekesyiri](https://github.com/ndekesyiri)**
+**Built with ❤️ by [ndekesyiri](https://github.com/ndekesyiri)**
